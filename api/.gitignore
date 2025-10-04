@@ -1,0 +1,16 @@
+# Dependências / builds
+node_modules/
+dist/
+coverage/
+.nyc_output/
+
+# Ambiente / editor
+.env
+.vscode/
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
