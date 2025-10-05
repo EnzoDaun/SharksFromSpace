@@ -66,7 +66,8 @@ export class AnalyzePredictionDto {
   toBBox(): BBox | undefined {
     if (!this.bbox) return undefined;
     const parts = this.bbox.split(',').map((n) => Number(n.trim()));
-    return parts as BBox;
+    if (parts.length !== 4) return undefined;
+    return parts as unknown as BBox;
   }
 
   /**

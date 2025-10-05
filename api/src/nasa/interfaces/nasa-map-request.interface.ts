@@ -1,5 +1,7 @@
-export type BBox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
-export type ImgFormat = 'image/png' | 'image/jpeg';
+import { NasaFormatEnum } from '../enums/nasa-format.enum';
+import { NasaStylesEnum } from '../enums/nasa-styles.enum';
+
+export type BBox = readonly [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 
 export interface BuildWmsUrlOptions {
   layer: string;
@@ -7,7 +9,7 @@ export interface BuildWmsUrlOptions {
   bbox?: BBox;                  // default: world
   width?: number;               // default: 1920
   height?: number;              // default: 960 (mantém proporção)
-  format?: ImgFormat;           // default: config.defaultFormat
+  format?: NasaFormatEnum;      // default: config.defaultFormat
   transparent?: boolean;        // default: true
-  styles?: string;              // default: ''
+  styles?: NasaStylesEnum | string; // default: 'default'
 }

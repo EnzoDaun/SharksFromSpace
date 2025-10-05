@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { NasaFormatEnum } from '../enums/nasa-format.enum';
 import { BuildWmsUrlOptions, BBox } from '../interfaces/nasa-map-request.interface';
+import { DATE_REGEX } from '../../common/constants/nasa.constants';
 
 /**
  * DTO genérico para consultas WMS. Pode ser usado em /nasa/maps ou endpoints específicos.
@@ -21,7 +22,7 @@ export class GetMapDto {
   /**
    * Data ISO curta (YYYY-MM-DD). Ex.: 2025-10-04
    */
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+  @Matches(DATE_REGEX, {
     message: 'time deve estar no formato YYYY-MM-DD',
   })
   time!: string;
@@ -87,7 +88,8 @@ export class GetMapDto {
   toBBox(): BBox | undefined {
     if (!this.bbox) return undefined;
     const parts = this.bbox.split(',').map((n) => Number(n.trim()));
-    return parts as BBox;
+    if (parts.length !== 4) return undefined;
+    return parts as unknown as BBox;
   }
 
   /**

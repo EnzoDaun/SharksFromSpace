@@ -1,4 +1,7 @@
 import * as Joi from 'joi';
+import { NasaFormatEnum } from '../../nasa/enums/nasa-format.enum';
+import { NasaVersionEnum } from '../../nasa/enums/nasa-version.enum';
+import { NasaCrsEnum } from '../../nasa/enums/nasa-crs.enum';
 
 export const envValidationSchema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
@@ -12,9 +15,9 @@ export const envValidationSchema = Joi.object({
   NASA_WMS_BASE: Joi.string()
     .uri()
     .default('https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi'),
-  NASA_WMS_VERSION: Joi.string().valid('1.3.0', '1.1.1').default('1.3.0'),
-  NASA_WMS_CRS: Joi.string().default('EPSG:4326'),
+  NASA_WMS_VERSION: Joi.string().valid(...Object.values(NasaVersionEnum)).default(NasaVersionEnum.V1_3_0),
+  NASA_WMS_CRS: Joi.string().valid(...Object.values(NasaCrsEnum)).default(NasaCrsEnum.EPSG_4326),
   NASA_LAYER_CHLA: Joi.string().default('OCI_PACE_Chlorophyll_a'),
   NASA_LAYER_SST: Joi.string().default('GHRSST_L4_MUR_Sea_Surface_Temperature'),
-  NASA_DEFAULT_FORMAT: Joi.string().valid('image/png', 'image/jpeg').default('image/png'),
+  NASA_DEFAULT_FORMAT: Joi.string().valid(...Object.values(NasaFormatEnum)).default(NasaFormatEnum.PNG),
 });

@@ -1,5 +1,5 @@
 export interface NasaImageResult {
   url: string;
-  contentType: string;
+  contentType: 'image/png' | 'image/jpeg';
   buffer: Buffer;
 }

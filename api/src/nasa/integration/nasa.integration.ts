@@ -2,6 +2,9 @@ import { Injectable, BadRequestException, InternalServerErrorException } from '@
 import { NasaParser } from '../parser/nasa.parser';
 import { BuildWmsUrlOptions } from '../interfaces/nasa-map-request.interface';
 import { NasaImageResult } from '../interfaces/nasa-map-response.interface';
+import { NasaFormatEnum } from '../enums/nasa-format.enum';
+import { NasaStylesEnum } from '../enums/nasa-styles.enum';
+import { DEFAULT_ACCEPT_HEADER_PNG, DEFAULT_UA } from '../../common/constants/nasa.constants';
 
 /**
  * Responsável por chamar o endpoint WMS da NASA e retornar PNG como Buffer.
@@ -20,9 +23,9 @@ export class NasaIntegration {
   ): Promise<NasaImageResult> {
     const url = this.parser.buildChlorophyllGetMapUrl(time, {
       ...partial,
-      format: 'image/png',
+      format: NasaFormatEnum.PNG,
       transparent: partial?.transparent ?? true, // Clorofila: manter transparência
-      styles: partial?.styles || 'default', // garantir styles default
+      styles: partial?.styles || NasaStylesEnum.DEFAULT, // garantir styles default
     });
     return this.fetchPng(url);
   }
@@ -36,9 +39,9 @@ export class NasaIntegration {
   ): Promise<NasaImageResult> {
     const url = this.parser.buildSstGetMapUrl(time, {
       ...partial,
-      format: 'image/png',
+      format: NasaFormatEnum.PNG,
       transparent: partial?.transparent ?? false, // SST: evitar transparência por default
-      styles: partial?.styles || 'default', // garantir styles default
+      styles: partial?.styles || NasaStylesEnum.DEFAULT, // garantir styles default
     });
     return this.fetchPng(url);
   }
@@ -55,7 +58,7 @@ export class NasaIntegration {
       layer,
       time,
       ...partial,
-      format: 'image/png',
+      format: NasaFormatEnum.PNG,
       transparent: partial?.transparent ?? true,
     });
     return this.fetchPng(url);
@@ -70,8 +73,8 @@ export class NasaIntegration {
       method: 'GET',
       headers: {
         // Garante PNG. (O servidor pode responder com XML de erro; checamos abaixo.)
-        Accept: 'image/png,image/*;q=0.8,*/*;q=0.5',
-        'User-Agent': 'SharksFromSpace/1.0 (+server-side NestJS)',
+        Accept: DEFAULT_ACCEPT_HEADER_PNG,
+        'User-Agent': DEFAULT_UA,
       },
     });
 
@@ -94,7 +97,11 @@ export class NasaIntegration {
     }
 
     const ab = await res.arrayBuffer();
-    return { url, contentType, buffer: Buffer.from(ab) };
+    return { 
+      url, 
+      contentType: contentType as 'image/png', 
+      buffer: Buffer.from(ab) 
+    };
   }
 
   private extractWmsError(xmlOrText: string): string | null {

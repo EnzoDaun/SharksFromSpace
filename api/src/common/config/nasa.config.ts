@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NasaVersionEnum } from '../../nasa/enums/nasa-version.enum';
+import { NasaCrsEnum } from '../../nasa/enums/nasa-crs.enum';
+import { NasaFormatEnum } from '../../nasa/enums/nasa-format.enum';
 
 @Injectable()
 export class NasaConfigService {
@@ -9,16 +12,16 @@ export class NasaConfigService {
     return this.config.get<string>('NASA_WMS_BASE', 'https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi');
   }
 
-  get version(): '1.3.0' | '1.1.1' {
-    return this.config.get<'1.3.0' | '1.1.1'>('NASA_WMS_VERSION', '1.3.0');
+  get version(): NasaVersionEnum {
+    return this.config.get<NasaVersionEnum>('NASA_WMS_VERSION', NasaVersionEnum.V1_3_0);
   }
 
-  get crs(): string {
-    return this.config.get<string>('NASA_WMS_CRS', 'EPSG:4326');
+  get crs(): NasaCrsEnum {
+    return this.config.get<NasaCrsEnum>('NASA_WMS_CRS', NasaCrsEnum.EPSG_4326);
   }
 
-  get defaultFormat(): 'image/png' | 'image/jpeg' {
-    return this.config.get<'image/png' | 'image/jpeg'>('NASA_DEFAULT_FORMAT', 'image/png');
+  get defaultFormat(): NasaFormatEnum {
+    return this.config.get<NasaFormatEnum>('NASA_DEFAULT_FORMAT', NasaFormatEnum.PNG);
   }
 
   get chlorophyllLayer(): string {
