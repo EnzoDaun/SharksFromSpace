@@ -1,4 +1,4 @@
-import { DATE_REGEX } from '../constants/nasa.constants';
+import { DATE_REGEX } from '../../nasa/constants/nasa.constants';
 
 /**
  * Utilitários para manipulação de datas

@@ -4,7 +4,7 @@ import { BuildWmsUrlOptions } from '../interfaces/nasa-map-request.interface';
 import { NasaImageResult } from '../interfaces/nasa-map-response.interface';
 import { NasaFormatEnum } from '../enums/nasa-format.enum';
 import { NasaStylesEnum } from '../enums/nasa-styles.enum';
-import { DEFAULT_ACCEPT_HEADER_PNG, DEFAULT_UA } from '../../common/constants/nasa.constants';
+import { DEFAULT_ACCEPT_HEADER_PNG, DEFAULT_UA } from '../constants/nasa.constants';
 
 /**
  * Responsável por chamar o endpoint WMS da NASA e retornar PNG como Buffer.

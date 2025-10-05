@@ -1,7 +1,7 @@
 import { Matches, IsOptional, IsString, IsInt, Min, Max, IsBoolean } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { BBox } from '../../nasa/interfaces/nasa-map-request.interface';
-import { DATE_REGEX } from '../../common/constants/nasa.constants';
+import { DATE_REGEX } from '../../nasa/constants/nasa.constants';
 
 export class AnalyzePredictionDto {
   @Matches(DATE_REGEX, {

@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { NasaFormatEnum } from '../enums/nasa-format.enum';
 import { BuildWmsUrlOptions, BBox } from '../interfaces/nasa-map-request.interface';
-import { DATE_REGEX } from '../../common/constants/nasa.constants';
+import { DATE_REGEX } from '../constants/nasa.constants';
 
 /**
  * DTO genérico para consultas WMS. Pode ser usado em /nasa/maps ou endpoints específicos.

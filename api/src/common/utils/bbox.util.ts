@@ -1,5 +1,5 @@
 import { BBox } from '../../nasa/interfaces/nasa-map-request.interface';
-import { DEFAULT_WORLD_BBOX } from '../constants/nasa.constants';
+import { DEFAULT_WORLD_BBOX } from '../../nasa/constants/nasa.constants';
 
 /**
  * Utilitários para manipulação de Bounding Box

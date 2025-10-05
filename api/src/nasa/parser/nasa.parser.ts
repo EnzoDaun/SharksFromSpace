@@ -8,7 +8,7 @@ import {
   DEFAULT_WIDTH, 
   MAX_PIXELS, 
   DATE_REGEX 
-} from '../../common/constants/nasa.constants';
+} from '../constants/nasa.constants';
 
 @Injectable()
 export class NasaParser {
