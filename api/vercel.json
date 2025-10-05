@@ -5,20 +5,14 @@
       "src": "serverless.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["src/**"]
+        "maxLambdaSize": "50mb"
       }
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "serverless.ts" }
-  ],
-  "functions": {
-    "serverless.ts": {
-      "memory": 1024,
-      "maxDuration": 30
+    {
+      "src": "/(.*)",
+      "dest": "/serverless.ts"
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
