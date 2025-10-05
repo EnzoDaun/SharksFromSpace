@@ -22,11 +22,15 @@ export default function BubbleBG({ children }) {
   return (
     <Box
       sx={{
-        position: 'relative',
+        position: 'fixed',
+        top: 0,
+        left: 0,
         width: '100vw',
         height: '100vh',
         background: 'linear-gradient(0deg, #022244, #58c8da)',
         overflow: 'hidden',
+        zIndex: -1,
+        pointerEvents: 'none',
         // Pseudo-elementos para as ondas
         '&::after, &::before': {
           backgroundColor: 'white',
@@ -185,22 +189,6 @@ export default function BubbleBG({ children }) {
           }}
         />
       </Box>
-
-      {/* Conteúdo que será renderizado sobre o background */}
-      {children && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 10,
-          }}
-        >
-          {children}
-        </Box>
-      )}
     </Box>
   );
 }

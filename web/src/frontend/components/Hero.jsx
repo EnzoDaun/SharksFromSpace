@@ -55,6 +55,26 @@ export default function Hero() {
     const handleNavClick = (itemId) => {
         setActiveItem(itemId);
         console.log(`Navegando para: ${itemId}`);
+        
+        // Scroll para a seção correspondente
+        let targetSection = null;
+        switch (itemId) {
+            case 'info':
+                // Placeholder para futura seção de informações
+                break;
+            case 'analysis':
+                targetSection = document.querySelector('#hub-section');
+                break;
+            case 'about-us':
+                targetSection = document.querySelector('#about-us-section');
+                break;
+            default:
+                break;
+        }
+        
+        if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     const drawer = (
