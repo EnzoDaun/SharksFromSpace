@@ -50,7 +50,10 @@ export default function Hero() {
         } else if (itemId === 'analysis') {
             console.log(`Navegando para: ${itemId}`);
         } else if (itemId === 'about-us') {
-            console.log(`Navegando para: ${itemId}`);
+            const aboutUsSection = document.querySelector('#about-us');
+            if (aboutUsSection) {
+                aboutUsSection.scrollIntoView({behavior: 'smooth'});
+            }
         }
     };
 

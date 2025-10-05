@@ -41,6 +41,11 @@ export default function Hub() {
             if (infoSection) {
                 infoSection.scrollIntoView({behavior: 'smooth'});
             }
+        } else if (cardTitle === 'About US') {
+            const aboutUsSection = document.querySelector('#about-us');
+            if (aboutUsSection) {
+                aboutUsSection.scrollIntoView({behavior: 'smooth'});
+            }
         } else {
             console.log(`Navegando para: ${cardTitle}`);
         }
