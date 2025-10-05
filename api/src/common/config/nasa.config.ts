@@ -9,11 +9,17 @@ export class NasaConfigService {
   constructor(private readonly config: ConfigService) {}
 
   get baseUrl(): string {
-    return this.config.get<string>('NASA_WMS_BASE', 'https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi');
+    return this.config.get<string>(
+      'NASA_WMS_BASE',
+      'https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi',
+    );
   }
 
   get version(): NasaVersionEnum {
-    return this.config.get<NasaVersionEnum>('NASA_WMS_VERSION', NasaVersionEnum.V1_3_0);
+    return this.config.get<NasaVersionEnum>(
+      'NASA_WMS_VERSION',
+      NasaVersionEnum.V1_3_0,
+    );
   }
 
   get crs(): NasaCrsEnum {
@@ -21,7 +27,10 @@ export class NasaConfigService {
   }
 
   get defaultFormat(): NasaFormatEnum {
-    return this.config.get<NasaFormatEnum>('NASA_DEFAULT_FORMAT', NasaFormatEnum.PNG);
+    return this.config.get<NasaFormatEnum>(
+      'NASA_DEFAULT_FORMAT',
+      NasaFormatEnum.PNG,
+    );
   }
 
   get chlorophyllLayer(): string {
@@ -29,6 +38,9 @@ export class NasaConfigService {
   }
 
   get sstLayer(): string {
-    return this.config.get<string>('NASA_LAYER_SST', 'GHRSST_L4_MUR_Sea_Surface_Temperature');
+    return this.config.get<string>(
+      'NASA_LAYER_SST',
+      'GHRSST_L4_MUR_Sea_Surface_Temperature',
+    );
   }
 }

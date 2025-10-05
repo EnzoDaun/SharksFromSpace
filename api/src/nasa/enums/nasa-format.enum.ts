@@ -1,4 +1,4 @@
 export enum NasaFormatEnum {
-  PNG  = 'image/png',
+  PNG = 'image/png',
   JPEG = 'image/jpeg',
 }

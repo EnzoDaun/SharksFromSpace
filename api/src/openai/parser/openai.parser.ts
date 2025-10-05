@@ -5,11 +5,14 @@ import { AssistantMessagePart } from '../interfaces/assistant-message.interface'
 @Injectable()
 export class OpenAIParser {
   /**
-   * Monta o texto do usuário para o Assistant.
-   * As instruções principais (HTML-only, seções, etc.) devem estar no Assistant (Instructions).
-   * Aqui passamos apenas o contexto dinâmico (data, região) e indicamos que 2 imagens foram anexadas.
+   * Builds user text for Assistant.
+   * Main instructions (HTML-only, sections, etc.) should be in Assistant Instructions.
+   * Only passes dynamic context (date, region) and indicates 2 images are attached.
    */
-  buildUserTextForAssistant(params: { time: string; regionHint?: string }): string {
+  buildUserTextForAssistant(params: {
+    time: string;
+    regionHint?: string;
+  }): string {
     const { time, regionHint } = params;
 
     const lines = [
@@ -23,10 +26,12 @@ export class OpenAIParser {
   }
 
   /**
-   * Extrai HTML da resposta do assistant, removendo code fences se vierem
+   * Extracts HTML from assistant response, removing code fences if present
    */
   extractHtmlFromAssistant(messagesListJson: any): string {
-    const msg = (messagesListJson?.data ?? []).find((m: any) => m.role === 'assistant');
+    const msg = (messagesListJson?.data ?? []).find(
+      (m: any) => m.role === 'assistant',
+    );
     if (!msg) {
       throw new Error('Assistant returned no message.');
     }
@@ -35,7 +40,10 @@ export class OpenAIParser {
     const htmlChunks: string[] = [];
 
     for (const part of parts) {
-      if (part.type === OpenAIAssistantPartType.TEXT && typeof part.text?.value === 'string') {
+      if (
+        part.type === OpenAIAssistantPartType.TEXT &&
+        typeof part.text?.value === 'string'
+      ) {
         htmlChunks.push(part.text.value);
       }
     }
@@ -44,22 +52,23 @@ export class OpenAIParser {
     if (!html) {
       throw new Error('Assistant returned empty HTML.');
     }
-    
-    // Remove code fences HTML se vierem
-    html = html.replace(/```html\s*/g, '').replace(/```\s*$/g, '').trim();
-    
+
+    // Remove HTML code fences if present
+    html = html
+      .replace(/```html\s*/g, '')
+      .replace(/```\s*$/g, '')
+      .trim();
+
     return html;
   }
 
-  /**
-   * Sanitiza URLs para garantir que são PNG (se você desejar reforçar isso).
-   * Mantemos permissivo (o Assistant aceita URLs http/https). Use apenas se precisar.
-   */
   ensurePngUrl(url: string): string {
     try {
       const u = new URL(url);
-      // Se houver format na query, reforce image/png
-      if (u.searchParams.get('format') && u.searchParams.get('format') !== 'image/png') {
+      if (
+        u.searchParams.get('format') &&
+        u.searchParams.get('format') !== 'image/png'
+      ) {
         u.searchParams.set('format', 'image/png');
       }
       return u.toString();

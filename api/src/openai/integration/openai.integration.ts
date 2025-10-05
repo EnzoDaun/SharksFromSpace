@@ -1,11 +1,14 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { 
-  UserMessagePart, 
-  AssistantMessagePart, 
-  RunAssistantHtmlParams 
+import {
+  UserMessagePart,
+  AssistantMessagePart,
+  RunAssistantHtmlParams,
 } from '../interfaces/assistant-message.interface';
-import { OpenAIUserPartType, OpenAIAssistantPartType } from '../enums/assistant-message.enum';
+import {
+  OpenAIUserPartType,
+  OpenAIAssistantPartType,
+} from '../enums/assistant-message.enum';
 import { OpenAIModel } from '../enums/openai-model.enum';
 import {
   OPENAI_BETA_HEADER,
@@ -28,12 +31,16 @@ export class OpenAIIntegration {
 
   private get apiKey(): string {
     const key = this.config.get<string>('OPENAI_API_KEY', '');
-    if (!key) throw new InternalServerErrorException('OPENAI_API_KEY is missing.');
+    if (!key)
+      throw new InternalServerErrorException('OPENAI_API_KEY is missing.');
     return key;
   }
 
   private get baseUrl(): string {
-    return this.config.get<string>('OPENAI_BASE_URL', 'https://api.openai.com/v1');
+    return this.config.get<string>(
+      'OPENAI_BASE_URL',
+      'https://api.openai.com/v1',
+    );
   }
 
   private get model(): OpenAIModel {
@@ -42,12 +49,13 @@ export class OpenAIIntegration {
 
   private get assistantId(): string {
     const id = this.config.get<string>('OPENAI_ASSISTANT_ID', '');
-    if (!id) throw new InternalServerErrorException('OPENAI_ASSISTANT_ID is missing.');
+    if (!id)
+      throw new InternalServerErrorException('OPENAI_ASSISTANT_ID is missing.');
     return id;
   }
 
   /**
-   * Headers padronizados para Assistants v2
+   * Headers for Assistants v2
    */
   private get assistantHeaders(): Record<string, string> {
     return {
@@ -57,12 +65,8 @@ export class OpenAIIntegration {
     };
   }
 
-  // --------------------
-  // Assistants (Threads/Runs)
-  // --------------------
-
   /**
-   * Cria um novo thread para conversação
+   * Creates a new thread for conversation
    */
   async createThread(): Promise<string> {
     const res = await fetch(`${this.baseUrl}${OPENAI_THREADS_PATH}`, {
@@ -71,141 +75,193 @@ export class OpenAIIntegration {
       body: JSON.stringify({}),
     });
 
-    if (!res.ok) throw new InternalServerErrorException(`OpenAI createThread error ${res.status}: ${await res.text()}`);
+    if (!res.ok)
+      throw new InternalServerErrorException(
+        `OpenAI createThread error ${res.status}: ${await res.text()}`,
+      );
     const json = await res.json();
     return json.id as string;
   }
 
   /**
-   * Adiciona mensagem do usuário com texto e imagens via URLs
-   * Mantém compatibilidade com URLs WMS PNG públicas (não base64)
+   * Adds user message with text and images via URLs.
+   * Maintains compatibility with public WMS PNG URLs (not base64).
    */
-  async addUserMessageWithImages(threadId: string, userText: string, imageUrls: string[]): Promise<unknown> {
+  async addUserMessageWithImages(
+    threadId: string,
+    userText: string,
+    imageUrls: string[],
+  ): Promise<unknown> {
     const content: UserMessagePart[] = [
       { type: OpenAIUserPartType.TEXT, text: userText },
-      ...imageUrls.map((url): UserMessagePart => ({
-        type: OpenAIUserPartType.IMAGE_URL,
-        image_url: { url },
-      })),
+      ...imageUrls.map(
+        (url): UserMessagePart => ({
+          type: OpenAIUserPartType.IMAGE_URL,
+          image_url: { url },
+        }),
+      ),
     ];
 
-    const res = await fetch(`${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_MESSAGES_SEGMENT}`, {
-      method: 'POST',
-      headers: this.assistantHeaders,
-      body: JSON.stringify({
-        role: 'user',
-        content,
-      }),
-    });
-    
-    if (!res.ok) throw new InternalServerErrorException(`OpenAI addMessage error ${res.status}: ${await res.text()}`);
+    const res = await fetch(
+      `${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_MESSAGES_SEGMENT}`,
+      {
+        method: 'POST',
+        headers: this.assistantHeaders,
+        body: JSON.stringify({
+          role: 'user',
+          content,
+        }),
+      },
+    );
+
+    if (!res.ok)
+      throw new InternalServerErrorException(
+        `OpenAI addMessage error ${res.status}: ${await res.text()}`,
+      );
     return res.json();
   }
 
   /**
-   * Executa o assistant em um thread
-   * Removido max_output_tokens pois não é suportado por Assistants v2
+   * Runs the assistant on a thread.
+   * max_output_tokens removed (not supported by Assistants v2).
    */
-  async runAssistant(threadId: string, temperature = 0.2): Promise<{ id: string }> {
-    const res = await fetch(`${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_RUNS_SEGMENT}`, {
-      method: 'POST',
-      headers: this.assistantHeaders,
-      body: JSON.stringify({
-        assistant_id: this.assistantId,
-        model: this.model,
-        // temperature pode ou não ser aceito dependendo do modelo/rollout.
-        // Se der erro "Unknown parameter: 'temperature'", remova esta linha.
-        temperature,
-      }),
-    });
-    
-    if (!res.ok) throw new InternalServerErrorException(`OpenAI run error ${res.status}: ${await res.text()}`);
+  async runAssistant(
+    threadId: string,
+    temperature = 0.2,
+  ): Promise<{ id: string }> {
+    const res = await fetch(
+      `${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_RUNS_SEGMENT}`,
+      {
+        method: 'POST',
+        headers: this.assistantHeaders,
+        body: JSON.stringify({
+          assistant_id: this.assistantId,
+          model: this.model,
+          temperature,
+        }),
+      },
+    );
+
+    if (!res.ok)
+      throw new InternalServerErrorException(
+        `OpenAI run error ${res.status}: ${await res.text()}`,
+      );
     return res.json();
   }
 
   /**
-   * Faz polling do status de execução até completar ou falhar
+   * Polls run status until completion or failure
    */
   async pollRun(
-    threadId: string, 
-    runId: string, 
-    timeoutMs = OPENAI_RUN_POLL_TIMEOUT_MS, 
-    intervalMs = OPENAI_RUN_POLL_INTERVAL_MS
+    threadId: string,
+    runId: string,
+    timeoutMs = OPENAI_RUN_POLL_TIMEOUT_MS,
+    intervalMs = OPENAI_RUN_POLL_INTERVAL_MS,
   ): Promise<unknown> {
     const start = Date.now();
-    
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const res = await fetch(`${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_RUNS_SEGMENT}/${runId}`, {
-        method: 'GET',
-        headers: this.assistantHeaders,
-      });
 
-      if (!res.ok) throw new InternalServerErrorException(`OpenAI poll run error ${res.status}: ${await res.text()}`);
+    while (true) {
+      const res = await fetch(
+        `${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_RUNS_SEGMENT}/${runId}`,
+        {
+          method: 'GET',
+          headers: this.assistantHeaders,
+        },
+      );
+
+      if (!res.ok)
+        throw new InternalServerErrorException(
+          `OpenAI poll run error ${res.status}: ${await res.text()}`,
+        );
       const json = await res.json();
 
       const status = json.status as string;
       if (status === OPENAI_RUN_STATUS_COMPLETED) return json;
-      if (status === OPENAI_RUN_STATUS_FAILED || status === OPENAI_RUN_STATUS_CANCELLED || status === OPENAI_RUN_STATUS_EXPIRED) {
-        throw new InternalServerErrorException(`Assistant run ended with status=${status}`);
+      if (
+        status === OPENAI_RUN_STATUS_FAILED ||
+        status === OPENAI_RUN_STATUS_CANCELLED ||
+        status === OPENAI_RUN_STATUS_EXPIRED
+      ) {
+        throw new InternalServerErrorException(
+          `Assistant run ended with status=${status}`,
+        );
       }
       if (Date.now() - start > timeoutMs) {
-        throw new InternalServerErrorException(`Assistant run timeout after ${timeoutMs} ms`);
+        throw new InternalServerErrorException(
+          `Assistant run timeout after ${timeoutMs} ms`,
+        );
       }
       await new Promise((r) => setTimeout(r, intervalMs));
     }
   }
 
   /**
-   * Lista mensagens do thread
+   * Lists thread messages
    */
   async listMessages(threadId: string): Promise<unknown> {
     const res = await fetch(
-      `${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_MESSAGES_SEGMENT}?order=${OPENAI_MESSAGES_ORDER}&limit=${OPENAI_MESSAGES_LIMIT}`, 
+      `${this.baseUrl}${OPENAI_THREADS_PATH}/${threadId}${OPENAI_MESSAGES_SEGMENT}?order=${OPENAI_MESSAGES_ORDER}&limit=${OPENAI_MESSAGES_LIMIT}`,
       {
         method: 'GET',
         headers: this.assistantHeaders,
-      }
+      },
     );
 
-    if (!res.ok) throw new InternalServerErrorException(`OpenAI list messages error ${res.status}: ${await res.text()}`);
+    if (!res.ok)
+      throw new InternalServerErrorException(
+        `OpenAI list messages error ${res.status}: ${await res.text()}`,
+      );
     return res.json();
   }
 
   /**
-   * Extrai HTML da resposta do assistant, removendo code fences se necessário
+   * Extracts HTML from assistant response, removing code fences if present
    */
   private extractHtmlFromAssistant(messagesListJson: any): string {
-    const msg = (messagesListJson?.data ?? []).find((m: any) => m.role === 'assistant');
-    if (!msg) throw new InternalServerErrorException('Assistant returned no message.');
+    const msg = (messagesListJson?.data ?? []).find(
+      (m: any) => m.role === 'assistant',
+    );
+    if (!msg)
+      throw new InternalServerErrorException('Assistant returned no message.');
 
     const parts = (msg.content ?? []) as AssistantMessagePart[];
     const htmlChunks: string[] = [];
 
     for (const p of parts) {
-      if (p.type === OpenAIAssistantPartType.TEXT && typeof p.text?.value === 'string') {
+      if (
+        p.type === OpenAIAssistantPartType.TEXT &&
+        typeof p.text?.value === 'string'
+      ) {
         htmlChunks.push(p.text.value);
       }
     }
 
     let html = htmlChunks.join('\n').trim();
-    if (!html) throw new InternalServerErrorException('Assistant returned empty HTML.');
-    
-    // Remove code fences HTML se vierem
-    html = html.replace(/```html\s*/g, '').replace(/```\s*$/g, '').trim();
-    
+    if (!html)
+      throw new InternalServerErrorException('Assistant returned empty HTML.');
+
+    // Remove HTML code fences if present
+    html = html
+      .replace(/```html\s*/g, '')
+      .replace(/```\s*$/g, '')
+      .trim();
+
     return html;
   }
 
   /**
-   * Orquestra: cria thread, adiciona mensagem com texto + imagens (URLs), roda assistant e devolve HTML.
-   * Envia imagens como image_url parts com URLs WMS públicas; v2 requer OpenAI-Beta header
+   * Orchestrates: creates thread, adds message with text + images (URLs), runs assistant and returns HTML.
+   * Sends images as image_url parts with public WMS URLs; v2 requires OpenAI-Beta header.
    */
   async runAssistantHtml(params: RunAssistantHtmlParams): Promise<string> {
     const { userText, imageUrls, temperature = 0.2 } = params;
 
     const threadId = await this.createThread();
-    await this.addUserMessageWithImages(threadId, userText, Array.isArray(imageUrls) ? imageUrls : [imageUrls[0], imageUrls[1]]);
+    await this.addUserMessageWithImages(
+      threadId,
+      userText,
+      Array.isArray(imageUrls) ? imageUrls : [imageUrls[0], imageUrls[1]],
+    );
 
     const run = await this.runAssistant(threadId, temperature);
     await this.pollRun(threadId, run.id);

@@ -7,10 +7,6 @@ import { NasaImageResult } from '../interfaces/nasa-map-response.interface';
 export class GetChlorophyllMapUseCase {
   constructor(private readonly nasa: NasaIntegration) {}
 
-  /**
-   * Retorna a imagem (PNG) de clorofila-a (fitoplâncton) para a data informada.
-   * O formato é forçado para image/png dentro da integration.
-   */
   async execute(
     time: string,
     opts?: Omit<BuildWmsUrlOptions, 'layer' | 'time' | 'format'>,

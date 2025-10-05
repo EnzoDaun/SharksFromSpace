@@ -14,38 +14,37 @@ export class AnalyzeSharkProbabilityUseCase {
   ) {}
 
   /**
-   * Monta as URLs WMS (PNG) para clorofila e SST, envia ao Assistant e retorna apenas o HTML.
-   * Orquestra sem duplicar construção de URL (sempre via parser/build...Url).
-   * Não chama fetch direto — usa a NasaIntegration.
+   * Builds WMS URLs (PNG) for chlorophyll and SST, sends to Assistant and returns HTML.
+   * Orchestrates without duplicating URL construction (always via parser/build...Url).
+   * Does not call fetch directly — uses NasaIntegration.
    */
   async execute(
     time: string,
     regionHint?: string,
-    wmsOptions?: any, // opções vindas do DTO para manter consistência
+    wmsOptions?: any,
   ): Promise<{ html: string }> {
-    // Defaults para garantir consistência com as rotas diretas
     const baseOptions = {
       format: NasaFormatEnum.PNG,
       width: 1280,
       styles: NasaStylesEnum.DEFAULT,
-      ...wmsOptions, // permite override dos parâmetros
+      ...wmsOptions,
     };
 
-    // 1) URLs WMS em PNG usadas pelo Assistant
     const chlorophyllUrl = this.buildUrl.chlorophyllUrl(time, {
       ...baseOptions,
-      transparent: baseOptions.transparent ?? true, // alpha útil para clorofila
+      transparent: baseOptions.transparent ?? true,
     });
 
     const sstUrl = this.buildUrl.sstUrl(time, {
       ...baseOptions,
-      transparent: baseOptions.transparent ?? false, // evitar aparência "branca" por alpha na SST
+      transparent: baseOptions.transparent ?? false,
     });
 
-    // 2) Texto curto do usuário (as Instructions estão no Assistant)
-    const userText = this.parser.buildUserTextForAssistant({ time, regionHint });
+    const userText = this.parser.buildUserTextForAssistant({
+      time,
+      regionHint,
+    });
 
-    // 3) Executa Assistants API e obtém HTML
     const html = await this.openai.runAssistantHtml({
       userText,
       imageUrls: [chlorophyllUrl, sstUrl],
