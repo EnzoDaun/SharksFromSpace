@@ -50,12 +50,12 @@ export default function Home() {
         const baseUrl = `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?service=WMS&request=GetMap&version=1.3.0&layers=MODIS_Terra_CorrectedReflectance_TrueColor&styles=&format=image/jpeg&transparent=false&bbox=-180,-90,180,90&width=2048&height=2048&CRS=EPSG:4326&TIME=${appliedDate}`
         setImageUrl(baseUrl)
 
-        // Temperature layer URL - usando API do backend
-        const tempUrl = `http://localhost:3000/nasa/sst.png?time=${appliedDate}`
+        // Temperature layer URL - usando MODIS_Aqua_L3_SST_MidIR_4km_Night_Daily
+        const tempUrl = `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?service=WMS&request=GetMap&version=1.3.0&layers=MODIS_Aqua_L3_SST_MidIR_4km_Night_Daily&styles=&format=image/png&transparent=true&bbox=-180,-90,180,90&width=2048&height=2048&CRS=EPSG:4326&TIME=${appliedDate}`
         setTemperatureLayerUrl(tempUrl)
 
-        // Chlorophyll layer URL - usando API do backend
-        const chloroUrl = `http://localhost:3000/nasa/chlorophyll.png?time=${appliedDate}`
+        // Chlorophyll layer URL - usando MODIS_Aqua_L2_Chlorophyll_A
+        const chloroUrl = `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?service=WMS&request=GetMap&version=1.3.0&layers=MODIS_Aqua_L2_Chlorophyll_A&styles=&format=image/png&transparent=true&bbox=-180,-90,180,90&width=2048&height=2048&CRS=EPSG:4326&TIME=${appliedDate}`
         setChlorophyllLayerUrl(chloroUrl)
     }, [appliedDate])
 
@@ -141,58 +141,91 @@ export default function Home() {
                         <h1>Risco de Presença de Tubarões — Clorofila-a + SST</h1>
                         <p class="escopo">Data analisada: ${appliedDate}. Fontes: imagens fornecidas (clorofila-a & SST).</p>
                       </header>
+
                       <section id="alto-risco">
                         <h2>Locais com Alto Risco</h2>
                         <ul>
-                          <li><strong>Costa Oeste da América do Sul</strong> — ressurgência costeira com alta clorofila e SST adequada
+                          <li>
+                            <strong>Costa Oeste da América do Sul</strong> — ressurgência costeira com alta clorofila e SST adequada
                             <div class="pais">País(es) mais afetados: Peru, Chile</div>
                             <div class="justificativa"><em>Por quê:</em> clorofila alta + SST adequada; padrão consistente/contínuo; convergência/local de frente.</div>
                           </li>
-                          <li><strong>Atlântico Noroeste</strong> — alta clorofila ao longo da Corrente do Golfo
+                          <li>
+                            <strong>Atlântico Noroeste</strong> — alta clorofila ao longo da Corrente do Golfo
                             <div class="pais">País(es) mais afetados: Estados Unidos</div>
                             <div class="justificativa"><em>Por quê:</em> clorofila alta + SST adequada; padrão consistente/contínuo; convergência/local de frente.</div>
                           </li>
-                          <li><strong>Costa Sudoeste da África</strong> — ressurgência de Benguela com alta clorofila
+                          <li>
+                            <strong>Costa Sudoeste da África</strong> — ressurgência de Benguela com alta clorofila
                             <div class="pais">País(es) mais afetados: Namíbia, África do Sul</div>
                             <div class="justificativa"><em>Por quê:</em> clorofila alta + SST adequada; padrão consistente/contínuo; convergência/local de frente.</div>
                           </li>
                         </ul>
                       </section>
+
                       <section id="medio-risco">
                         <h2>Locais com Médio Risco</h2>
                         <ul>
-                          <li><strong>Pacífico Equatorial Central</strong> — clorofila moderada e SST marginal
+                          <li>
+                            <strong>Pacífico Equatorial Central</strong> — clorofila moderada e SST marginal
                             <div class="pais">País(es) potencialmente afetados: Kiribati</div>
                             <div class="justificativa"><em>Por quê:</em> clorofila moderada e/ou SST marginal; padrão menos estável.</div>
                           </li>
-                          <li><strong>Mar de Java</strong> — clorofila moderada com SST marginal
+                          <li>
+                            <strong>Mar de Java</strong> — clorofila moderada com SST marginal
                             <div class="pais">País(es) potencialmente afetados: Indonésia</div>
                             <div class="justificativa"><em>Por quê:</em> clorofila moderada e/ou SST marginal; padrão menos estável.</div>
                           </li>
-                          <li><strong>Atlântico Sul (Zona de Convergência)</strong> — clorofila moderada
-                            <div class="pais">País(es) potencialmente afetados: Brasil, Uruguai</div>
-                            <div class="justificativa"><em>Por quê:</em> clorofila moderada e/ou SST marginal; padrão menos estável.</div>
-                          </li>
                         </ul>
                       </section>
-                      <section id="baixo-risco">
-                        <h2>Locais com Baixo Risco</h2>
+
+                      <section id="previsao-movimento">
+                        <h2>Previsão de Movimentação (7–14 dias)</h2>
                         <ul>
-                          <li><strong>Oceano Pacífico Central (Giros Subtropicais)</strong> — águas oligotróficas
-                            <div class="justificativa"><em>Por quê:</em> clorofila muito baixa; SST fora da faixa ideal; águas oligotróficas.</div>
-                          </li>
-                          <li><strong>Oceano Índico Central</strong> — águas oligotróficas
-                            <div class="justificativa"><em>Por quê:</em> clorofila muito baixa; SST fora da faixa ideal; águas oligotróficas.</div>
-                          </li>
-                          <li><strong>Atlântico Central (Giro Subtropical)</strong> — águas oligotróficas
-                            <div class="justificativa"><em>Por quê:</em> clorofila muito baixa; SST fora da faixa ideal; águas oligotróficas.</div>
-                          </li>
+                          <li><strong>Deslocamento esperado:</strong> Costa Oeste da América do Sul — <em>Racional:</em> tendência de ressurgência contínua e movimento equatorward devido à estação.</li>
+                          <li><strong>Deslocamento esperado:</strong> Atlântico Noroeste — <em>Racional:</em> deslocamento ao longo da Corrente do Golfo com padrão sazonal de outono.</li>
+                          <li><strong>Deslocamento esperado:</strong> Costa Sudoeste da África — <em>Racional:</em> ressurgência de Benguela persistente com movimento poleward.</li>
                         </ul>
                       </section>
-                      <footer>
-                        <p class="nota"><strong>Nota metodológica:</strong> Esta análise combina dados de clorofila-a (indicador de produtividade primária) e SST (temperatura da superfície do mar) para identificar áreas com maior probabilidade de presença de tubarões.</p>
-                        <p class="nota"><strong>Limitações:</strong> Esta análise é baseada em dados de satélite e não considera outros fatores importantes como batimetria, correntes oceânicas, sazonalidade, e comportamento específico de espécies.</p>
-                      </footer>
+
+                      <section id="paises-probabilidade">
+                        <h2>Países com Maior Probabilidade</h2>
+                        <ol>
+                          <li><strong>Peru</strong> — ressurgência costeira; clorofila alta + SST adequada.</li>
+                          <li><strong>Chile</strong> — ressurgência costeira; clorofila alta + SST adequada.</li>
+                          <li><strong>Estados Unidos</strong> — talude da Corrente do Golfo; clorofila alta + SST adequada.</li>
+                          <li><strong>Namíbia</strong> — ressurgência de Benguela; clorofila alta + SST adequada.</li>
+                          <li><strong>África do Sul</strong> — ressurgência de Benguela; clorofila alta + SST adequada.</li>
+                        </ol>
+                      </section>
+
+                      <section id="conservacao">
+                        <h2>Conservação e Preservação do Habitat</h2>
+                        <ul>
+                          <li>Recomendações para <strong>mitigar risco de interação humana</strong> sem prejudicar a espécie (ex.: sinalização, educação de banhistas, horários).</li>
+                          <li>Boas práticas para <strong>preservar o habitat</strong> (ex.: evitar isca/atração, proteção de áreas de ressurgência, monitoramento sazonal).</li>
+                          <li>Abordagem de <strong>coexistência</strong> e importância ecológica dos tubarões.</li>
+                        </ul>
+                      </section>
+
+                      <section id="confiabilidade">
+                        <h2>Confiabilidade</h2>
+                        <p class="score">Estimativa: <strong>85%</strong></p>
+                        <ul class="fatores">
+                          <li>Qualidade/clareza das duas imagens; concordância entre clorofila e SST.</li>
+                          <li>Padrões contínuos vs. manchas isoladas; possíveis vazios/transparência.</li>
+                          <li>Coerência com estação/rotas típicas; incerteza regional.</li>
+                        </ul>
+                      </section>
+
+                      <section id="resumo-detalhado">
+                        <h2>Resumo Detalhado</h2>
+                        <p>A análise das imagens de clorofila-a e SST revela áreas de alta produtividade e adequação térmica, especialmente nas regiões de ressurgência e ao longo de correntes oceânicas importantes. A convergência de alta clorofila e SST adequada sugere hotspots de potencial presença de tubarões, com maior risco em áreas de ressurgência costeira e ao longo da Corrente do Golfo. A previsão de movimentação considera a estação e as correntes dominantes, sugerindo deslocamentos esperados ao longo das margens e correntes principais.</p>
+                        <small class="disclaimer">
+                          Análise qualitativa baseada em proxies espaciais (clorofila e SST); não representa rastreamento direto.
+                          Preferências térmicas e padrões migratórios variam por espécie e região; use com cautela.
+                        </small>
+                      </section>
                     </section>
                 `)
                 
@@ -361,7 +394,7 @@ export default function Home() {
     }
 
     return (
-        <Box id="satellite-analysis" sx={{ width: "100%", minHeight: "100vh", bgcolor: "transparent" }}>
+        <Box sx={{ width: "100%", minHeight: "100vh", bgcolor: "transparent" }}>
             <Container maxWidth="xl" sx={{ py: { xs: 2, sm: 4, md: 6 }, minHeight: "100vh" }}>
                 <Stack
                     direction={{ xs: "column", lg: "row" }}
@@ -903,37 +936,14 @@ export default function Home() {
           font-size: 0.875rem;
           color: #666;
           margin-bottom: 1rem;
-        #previsao-movimento h2 {
-          color: #9c27b0;
-        }
-        #paises-probabilidade h2 {
-          color: #568203;
-        }
-        #conservacao h2 {
-          color: #4caf50;
-        }
-        #confiabilidade h2 {
-          color: #ff9800;
-        }
-        #resumo-detalhado h2 {
-          color: #607d8b;
-        }
         }
         .nota {
           font-size: 0.75rem;
           color: #666;
-        #analise-tubaroes ol {
-          padding-left: 1.5rem;
-        }
           margin-top: 1rem;
           padding: 0.5rem;
           background-color: #f5f5f5;
           border-radius: 4px;
-        }
-        #analise-tubaroes ol li {
-          border-left: none;
-          padding-left: 0;
-          margin-bottom: 0.5rem;
         }
       `}</style>
         </Box>
