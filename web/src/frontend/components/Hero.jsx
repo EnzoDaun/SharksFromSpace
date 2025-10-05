@@ -48,7 +48,10 @@ export default function Hero() {
                 infoSection.scrollIntoView({behavior: 'smooth'});
             }
         } else if (itemId === 'analysis') {
-            console.log(`Navegando para: ${itemId}`);
+            const analysisSection = document.querySelector('#satellite-analysis');
+            if (analysisSection) {
+                analysisSection.scrollIntoView({behavior: 'smooth'});
+            }
         } else if (itemId === 'about-us') {
             const aboutUsSection = document.querySelector('#about-us');
             if (aboutUsSection) {

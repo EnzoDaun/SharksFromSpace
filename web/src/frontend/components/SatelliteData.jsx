@@ -361,7 +361,7 @@ export default function Home() {
     }
 
     return (
-        <Box sx={{ width: "100%", minHeight: "100vh", bgcolor: "transparent" }}>
+        <Box id="satellite-analysis" sx={{ width: "100%", minHeight: "100vh", bgcolor: "transparent" }}>
             <Container maxWidth="xl" sx={{ py: { xs: 2, sm: 4, md: 6 }, minHeight: "100vh" }}>
                 <Stack
                     direction={{ xs: "column", lg: "row" }}
