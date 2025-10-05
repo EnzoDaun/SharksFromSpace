@@ -1,11 +1,10 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { styled, useTheme } from '@mui/material/styles';
-import { useMediaQuery } from '@mui/material';
+import {styled, useTheme} from '@mui/material/styles';
+import {useMediaQuery} from '@mui/material';
 
-// Wrapper that creates the small teal halo/background like in the image
-const Outer = styled(Box)(({ theme }) => ({
+const Outer = styled(Box)(({theme}) => ({
     display: 'inline-block',
     padding: 6,
     borderRadius: 999,
@@ -15,7 +14,7 @@ const Outer = styled(Box)(({ theme }) => ({
     }
 }));
 
-const LearnButton = styled(Button)(({ theme }) => ({
+const LearnButton = styled(Button)(({theme}) => ({
     borderRadius: 999,
     textTransform: 'uppercase',
     padding: '10px 28px',
@@ -45,10 +44,9 @@ const LearnButton = styled(Button)(({ theme }) => ({
     }
 }));
 
-function HeroButton({ onClick, children = 'GET STARTED', sx }) {
+function HeroButton({onClick, children = 'GET STARTED', sx}) {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+    useMediaQuery(theme.breakpoints.down('sm'));
     return (
         <Outer>
             <LearnButton onClick={onClick} disableRipple sx={sx}>
@@ -57,4 +55,5 @@ function HeroButton({ onClick, children = 'GET STARTED', sx }) {
         </Outer>
     );
 }
+
 export default HeroButton

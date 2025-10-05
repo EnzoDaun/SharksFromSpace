@@ -1,21 +1,33 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import { keyframes } from '@emotion/react';
+import {keyframes} from '@emotion/react';
 
-// Definindo as animações usando keyframes do Emotion
 const wavesAnimation = keyframes`
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
+    0%, 100% {
+        transform: rotate(-2deg);
+    }
+    50% {
+        transform: rotate(2deg);
+    }
 `;
 
 const bubblesAnimation = keyframes`
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
+    0%, 100% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
 `;
 
 const bubbleAnimation = keyframes`
-    0% { bottom: -10%; opacity: 0; }
-    100% { bottom: 100%; }
+    0% {
+        bottom: -10%;
+        opacity: 0;
+    }
+    100% {
+        bottom: 100%;
+    }
 `;
 
 export default function BubbleBG() {
@@ -31,7 +43,6 @@ export default function BubbleBG() {
                 overflow: 'hidden',
                 zIndex: -1,
                 pointerEvents: 'none',
-                // Pseudo-elementos para as ondas
                 '&::after, &::before': {
                     backgroundColor: 'white',
                     width: '120%',
@@ -52,7 +63,6 @@ export default function BubbleBG() {
                 },
             }}
         >
-            {/* Container das bolhas */}
             <Box
                 sx={{
                     width: '100%',
@@ -60,7 +70,6 @@ export default function BubbleBG() {
                     animation: `${bubblesAnimation} 10s linear infinite`,
                 }}
             >
-                {/* Bolha 1 */}
                 <Box
                     sx={{
                         width: '50px',
@@ -77,7 +86,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 2 */}
                 <Box
                     sx={{
                         width: '30px',
@@ -93,7 +101,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 3 */}
                 <Box
                     sx={{
                         width: '10px',
@@ -109,7 +116,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 4 */}
                 <Box
                     sx={{
                         width: '35px',
@@ -125,7 +131,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 5 */}
                 <Box
                     sx={{
                         width: '45px',
@@ -141,7 +146,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 6 */}
                 <Box
                     sx={{
                         width: '40px',
@@ -157,7 +161,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 7 */}
                 <Box
                     sx={{
                         width: '15px',
@@ -173,7 +176,6 @@ export default function BubbleBG() {
                     }}
                 />
 
-                {/* Bolha 8 */}
                 <Box
                     sx={{
                         width: '20px',

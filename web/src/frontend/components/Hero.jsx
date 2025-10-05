@@ -1,20 +1,19 @@
-// Hero.jsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {
-  Button,
-  useTheme,
-  useMediaQuery
+    Button,
+    useTheme,
+    useMediaQuery
 } from '@mui/material';
 import HeroButton from "./HeroButton.jsx";
 import SharkBG from '../assets/SharkBG.png';
 import SpaceSharkLogo from '../assets/SpaceSharkLogo.png';
 
 const navItems = [
-  { text: 'Info', id: 'info' },
-  { text: 'Analysis', id: 'analysis' },
-  { text: 'About us', id: 'about-us' }
+    {text: 'Info', id: 'info'},
+    {text: 'Analysis', id: 'analysis'},
+    {text: 'About us', id: 'about-us'}
 ];
 
 export default function Hero() {
@@ -34,23 +33,30 @@ export default function Hero() {
     };
 
     const handleButtonClick = () => {
-        // Scroll para a próxima seção (Hub)
         const hubSection = document.querySelector('#hub-section');
         if (hubSection) {
-            hubSection.scrollIntoView({ behavior: 'smooth' });
+            hubSection.scrollIntoView({behavior: 'smooth'});
         }
     };
 
     const handleNavClick = (itemId) => {
         setActiveItem(itemId);
-        console.log(`Navegando para: ${itemId}`);
+
+        if (itemId === 'info') {
+            const infoSection = document.querySelector('#info-section');
+            if (infoSection) {
+                infoSection.scrollIntoView({behavior: 'smooth'});
+            }
+        } else if (itemId === 'analysis') {
+            console.log(`Navegando para: ${itemId}`);
+        } else if (itemId === 'about-us') {
+            console.log(`Navegando para: ${itemId}`);
+        }
     };
 
     return (
         <>
-            {/* Hero Section */}
             <Box sx={heroStyle}>
-                {/* opcional: overlay leve para garantir contraste do texto */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -61,20 +67,18 @@ export default function Hero() {
                     }}
                 />
 
-                {/* Logo e NavBar - Layout específico para cada dispositivo */}
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: { xs: '4%', sm: '20%', md: '20%', lg: '12%' }, // 20% para tablet e laptop, 12% para desktop
-                        left: { xs: '4%', sm: '10%', md: '10%', lg: '18%' }, // 10% para tablet e laptop, 18% para desktop
+                        top: {xs: '4%', sm: '20%', md: '20%', lg: '12%'},
+                        left: {xs: '4%', sm: '10%', md: '10%', lg: '18%'},
                         zIndex: 3,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: { xs: 2, sm: 4, md: 4, lg: 4 },
+                        gap: {xs: 2, sm: 4, md: 4, lg: 4},
                         flexWrap: 'nowrap',
                     }}
                 >
-                    {/* Logo */}
                     <Box
                         sx={{
                             display: 'flex',
@@ -104,10 +108,9 @@ export default function Hero() {
                         />
                     </Box>
 
-                    {/* Navigation - diretamente ao lado do logo em desktop, tablet e laptop */}
                     <Box sx={{
-                        display: { xs: 'none', sm: 'flex', md: 'flex' }, // Oculta no mobile
-                        gap: { sm: 3, md: 3 }, // Same gap for tablet and desktop
+                        display: {xs: 'none', sm: 'flex', md: 'flex'},
+                        gap: {sm: 3, md: 3},
                         alignItems: 'center',
                         flexShrink: 0,
                     }}>
@@ -119,11 +122,11 @@ export default function Hero() {
                                     color: '#fff',
                                     textTransform: 'uppercase',
                                     fontWeight: 600,
-                                    letterSpacing: { sm: 1, md: 1 }, // Same spacing for tablet and desktop
-                                    px: { sm: 1.5, md: 1.5 }, // Same padding for tablet and desktop
-                                    py: { sm: 1, md: 1 }, // Same padding for tablet and desktop
+                                    letterSpacing: {sm: 1, md: 1},
+                                    px: {sm: 1.5, md: 1.5},
+                                    py: {sm: 1, md: 1},
                                     minWidth: 'auto',
-                                    fontSize: { sm: '1rem', md: '1rem' }, // Same font size for tablet and desktop
+                                    fontSize: {sm: '1rem', md: '1rem'},
                                     transition: 'all 0.3s ease',
                                     position: 'relative',
                                     backgroundColor: 'transparent',
@@ -157,10 +160,9 @@ export default function Hero() {
                         ))}
                     </Box>
 
-                    {/* Navigation buttons para mobile - ao lado do logo */}
                     <Box sx={{
-                        display: { xs: 'flex', sm: 'none' },
-                        gap: { xs: 1 },
+                        display: {xs: 'flex', sm: 'none'},
+                        gap: {xs: 1},
                         alignItems: 'center',
                         flexShrink: 0,
                     }}>
@@ -211,17 +213,16 @@ export default function Hero() {
                     </Box>
                 </Box>
 
-                {/* Título principal - layout consistente */}
                 <Box
                     sx={{
                         position: 'absolute',
-                        left: { xs: '2%', sm: '18%', md: '18%' }, // Same left position for tablet and desktop
-                        right: { xs: '4%', sm: '4%' },
-                        top: { xs: '22%', sm: '40%', md: '40%' }, // Same top position for tablet and desktop
-                        maxWidth: { xs: '92%', sm: 480, md: 480 }, // Same maxWidth for tablet and desktop
+                        left: {xs: '2%', sm: '18%', md: '18%'},
+                        right: {xs: '4%', sm: '4%'},
+                        top: {xs: '22%', sm: '40%', md: '40%'},
+                        maxWidth: {xs: '92%', sm: 480, md: 480},
                         color: '#fff',
                         zIndex: 2,
-                        textAlign: { xs: 'center', sm: 'left', md: 'left' }, // Same alignment for tablet and desktop
+                        textAlign: {xs: 'center', sm: 'left', md: 'left'},
                     }}
                 >
                     <Typography
@@ -230,15 +231,15 @@ export default function Hero() {
                             margin: 0,
                             fontWeight: 800,
                             textTransform: 'uppercase',
-                            lineHeight: { xs: 1, sm: 0.92, md: 0.92 }, // Same lineHeight for tablet and desktop
-                            letterSpacing: { xs: 1, sm: 1, md: 1 }, // Same letterSpacing for tablet and desktop
+                            lineHeight: {xs: 1, sm: 0.92, md: 0.92},
+                            letterSpacing: {xs: 1, sm: 1, md: 1},
                             fontSize: {
                                 xs: '2rem',
-                                sm: '3.5rem', // Same as desktop
+                                sm: '3.5rem',
                                 md: '3.5rem',
                                 lg: '4.8rem'
                             },
-                            whiteSpace: { xs: 'nowrap', sm: 'pre-line', md: 'pre-line' }, // Same for tablet and desktop
+                            whiteSpace: {xs: 'nowrap', sm: 'pre-line', md: 'pre-line'},
                             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
                         }}
                     >
@@ -246,20 +247,19 @@ export default function Hero() {
                     </Typography>
                 </Box>
 
-                {/* Botão - posição idêntica para tablet e desktop */}
                 <Box
                     sx={{
                         position: 'absolute',
-                        left: { xs: '4%', sm: '18%', md: '18%' }, // Same left position for tablet and desktop
-                        right: { xs: '4%', sm: '4%' },
-                        bottom: { xs: '12%', sm: 'auto', md: 'auto' },
-                        top: { xs: 'auto', sm: '78%', md: '78%' }, // Same top position for tablet e desktop
+                        left: {xs: '4%', sm: '18%', md: '18%'},
+                        right: {xs: '4%', sm: '4%'},
+                        bottom: {xs: '12%', sm: 'auto', md: 'auto'},
+                        top: {xs: 'auto', sm: '78%', md: '78%'},
                         zIndex: 2,
                         display: 'flex',
-                        justifyContent: { xs: 'center', sm: 'flex-start', md: 'flex-start' },
+                        justifyContent: {xs: 'center', sm: 'flex-start', md: 'flex-start'},
                     }}
                 >
-                    <HeroButton onClick={handleButtonClick} />
+                    <HeroButton onClick={handleButtonClick}/>
                 </Box>
             </Box>
         </>
