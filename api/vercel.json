@@ -14,5 +14,11 @@
       "src": "/(.*)",
       "dest": "/serverless.ts"
     }
-  ]
+  ],
+  "functions": {
+    "serverless.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }

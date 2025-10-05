@@ -1,25 +1,121 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+````markdown
+# Sharks From Space - API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API NestJS para análise de dados oceanográficos e predição de atividade de tubarões.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Desenvolvimento Local
+
+```bash
+# Instalar dependências
+$ npm install
+
+# Desenvolvimento
+$ npm run start:dev
+
+# Produção local
+$ npm run build
+$ npm run start:prod
+```
+
+## Deploy na Vercel (Serverless)
+
+### Configuração do Projeto na Vercel
+
+**Root Directory**: `api`  
+**Framework Preset**: `Other`  
+**Build Command**: `npm run build`  
+**Output Directory**: (deixar vazio)
+
+### Environment Variables
+
+Configure na Vercel (Settings > Environment Variables):
+
+```bash
+# NASA API Configuration (obrigatórias)
+NASA_WMS_BASE=https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi
+NASA_WMS_VERSION=1.1.1
+NASA_WMS_CRS=EPSG:4326
+NASA_LAYER_CHLA=MODIS_Aqua_Chlorophyll_A
+NASA_LAYER_SST=MODIS_Aqua_Sea_Surface_Temperature
+NASA_DEFAULT_FORMAT=image/png
+
+# OpenAI Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4
+
+# Performance (opcionais)
+HTTP_TIMEOUT_MS=30000
+HTTP_RETRY=3
+NODE_ENV=production
+```
+
+### Endpoints Disponíveis
+
+- `GET /` - Status da API
+- `GET /nasa/chlorophyll.png?time=YYYY-MM-DD` - Imagem de clorofila
+- `GET /nasa/sst.png?time=YYYY-MM-DD` - Imagem de temperatura
+- `GET /nasa/maps?time=YYYY-MM-DD` - Ambas imagens em JSON
+- `GET /openai/analyze?time=YYYY-MM-DD` - Análise de probabilidade
+
+### Exemplo de Teste
+
+```bash
+# Teste básico
+curl https://seu-projeto.vercel.app/
+
+# Imagens NASA
+curl https://seu-projeto.vercel.app/nasa/chlorophyll.png?time=2024-05-15
+curl https://seu-projeto.vercel.app/nasa/sst.png?time=2024-05-15
+
+# Análise OpenAI
+curl https://seu-projeto.vercel.app/openai/analyze?time=2024-05-15
+```
+
+## Arquitetura
+
+- **Framework**: NestJS + TypeScript
+- **Deploy**: Serverless na Vercel
+- **Entrypoint**: `serverless.ts` (handler usando @vendia/serverless-express)
+- **CORS**: Habilitado para domínios `*.vercel.app`
+
+## Troubleshooting
+
+**404 Error**: Verifique Root Directory e se `serverless.ts` está commitado  
+**500 Error**: Verifique logs na Vercel e environment variables  
+**Logs**: Vercel > Functions > serverless.ts
+
+---
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Run tests
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Resources
+
+Check out a few resources that may come in handy when working with NestJS:
+
+- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
+- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
+
+## License
+
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+````
 
 ## Description
 
