@@ -33,7 +33,7 @@ export default function Hero() {
     };
 
     const handleButtonClick = () => {
-        const hubSection = document.querySelector('#hub-section');
+        const hubSection = document.querySelector('#info-section');
         if (hubSection) {
             hubSection.scrollIntoView({behavior: 'smooth'});
         }

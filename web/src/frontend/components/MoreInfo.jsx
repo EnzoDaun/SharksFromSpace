@@ -38,7 +38,7 @@ const sections = [
 export default function MoreInfo() {
     return (
         <Box
-            id="info-section"
+            id="more-info-section"
             sx={{
                 minHeight: '100vh',
                 py: {xs: 4, sm: 6, md: 8},
