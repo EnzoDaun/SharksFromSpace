@@ -1,15 +1,25 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { NasaConfigService } from '../../common/config/nasa.config';
-import { BuildWmsUrlOptions, BBox, ImgFormat } from '../interfaces/nasa-map-request.interface';
+import {
+  BuildWmsUrlOptions,
+  BBox,
+} from '../interfaces/nasa-map-request.interface';
 import { NasaFormatEnum } from '../enums/nasa-format.enum';
+import { NasaStylesEnum } from '../enums/nasa-styles.enum';
+import {
+  DEFAULT_WORLD_BBOX,
+  DEFAULT_WIDTH,
+  MAX_PIXELS,
+  DATE_REGEX,
+} from '../constants/nasa.constants';
 
 @Injectable()
 export class NasaParser {
   constructor(private readonly nasaCfg: NasaConfigService) {}
 
   /**
-   * Monta uma URL WMS GetMap do GIBS para a camada desejada.
-   * Observação: Em EPSG:4326, a ordem do BBOX é [minLon,minLat,maxLon,maxLat].
+   * Builds WMS GetMap URL for GIBS layer.
+   * bbox order in EPSG:4326 is [minLon,minLat,maxLon,maxLat].
    */
   buildGetMapUrl(opts: BuildWmsUrlOptions): string {
     const layer = (opts.layer || '').trim();
@@ -17,15 +27,17 @@ export class NasaParser {
 
     const time = (opts.time || '').trim();
     if (!this.isIsoDate(time)) {
-      throw new BadRequestException('Parâmetro "time" deve estar no formato YYYY-MM-DD.');
+      throw new BadRequestException(
+        'Parâmetro "time" deve estar no formato YYYY-MM-DD.',
+      );
     }
 
     const bbox = this.normalizeBBox(opts.bbox);
     const { width, height } = this.normalizeSize(opts.width, opts.height, bbox);
 
-    const format: ImgFormat = opts.format ?? (NasaFormatEnum.PNG as ImgFormat);
+    const format: NasaFormatEnum = opts.format ?? this.nasaCfg.defaultFormat;
     const transparent = opts.transparent ?? true;
-    const styles = opts.styles || 'default'; // usar 'default' em vez de string vazia
+    const styles = opts.styles || NasaStylesEnum.DEFAULT;
 
     const qs = new URLSearchParams({
       service: 'WMS',
@@ -45,8 +57,10 @@ export class NasaParser {
     return `${this.nasaCfg.baseUrl}?${qs.toString()}`;
   }
 
-  /** Helpers para camadas padrão configuradas via env */
-  buildChlorophyllGetMapUrl(time: string, partial?: Omit<BuildWmsUrlOptions, 'layer' | 'time'>): string {
+  buildChlorophyllGetMapUrl(
+    time: string,
+    partial?: Omit<BuildWmsUrlOptions, 'layer' | 'time'>,
+  ): string {
     return this.buildGetMapUrl({
       layer: this.nasaCfg.chlorophyllLayer,
       time,
@@ -54,7 +68,10 @@ export class NasaParser {
     });
   }
 
-  buildSstGetMapUrl(time: string, partial?: Omit<BuildWmsUrlOptions, 'layer' | 'time'>): string {
+  buildSstGetMapUrl(
+    time: string,
+    partial?: Omit<BuildWmsUrlOptions, 'layer' | 'time'>,
+  ): string {
     return this.buildGetMapUrl({
       layer: this.nasaCfg.sstLayer,
       time,
@@ -62,22 +79,17 @@ export class NasaParser {
     });
   }
 
-  // -------------------
-  // Internals
-  // -------------------
-
   private isIsoDate(s: string): boolean {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    if (!DATE_REGEX.test(s)) return false;
     const d = new Date(s + 'T00:00:00Z');
     if (Number.isNaN(d.valueOf())) return false;
     return d.toISOString().slice(0, 10) === s;
   }
 
   private normalizeBBox(bbox?: BBox): BBox {
-    const world: BBox = [-180, -90, 180, 90];
-    if (!bbox) return world;
+    if (!bbox) return [...DEFAULT_WORLD_BBOX];
 
-    const [minLon, minLat, maxLon, maxLat] = bbox.map(Number) as BBox;
+    const [minLon, minLat, maxLon, maxLat] = bbox;
     if (
       !this.inRange(minLon, -180, 180) ||
       !this.inRange(maxLon, -180, 180) ||
@@ -86,27 +98,34 @@ export class NasaParser {
       minLon >= maxLon ||
       minLat >= maxLat
     ) {
-      throw new BadRequestException('BBox inválido. Esperado [minLon,minLat,maxLon,maxLat].');
+      throw new BadRequestException(
+        'BBox inválido. Esperado [minLon,minLat,maxLon,maxLat].',
+      );
     }
     return [minLon, minLat, maxLon, maxLat];
   }
 
-  private normalizeSize(width?: number, height?: number, bbox?: BBox): { width: number; height: number } {
-    const DEFAULT_W = 1920;
-    const w = Math.max(1, Math.floor(width ?? DEFAULT_W));
+  private normalizeSize(
+    width?: number,
+    height?: number,
+    bbox?: BBox,
+  ): { width: number; height: number } {
+    const w = Math.max(1, Math.floor(width ?? DEFAULT_WIDTH));
 
     if (height && height > 0) {
       return { width: w, height: Math.floor(height) };
     }
 
-    const [minLon, minLat, maxLon, maxLat] = bbox ?? [-180, -90, 180, 90];
+    const [minLon, minLat, maxLon, maxLat] = bbox ?? DEFAULT_WORLD_BBOX;
     const lonSpan = Math.abs(maxLon - minLon);
     const latSpan = Math.abs(maxLat - minLat);
-    const aspect = lonSpan > 0 && latSpan > 0 ? lonSpan / latSpan : 2; // fallback 2:1
+    const aspect = lonSpan > 0 && latSpan > 0 ? lonSpan / latSpan : 2;
     const h = Math.max(1, Math.round(w / aspect));
 
-    if (w * h > 20_000_000) {
-      throw new BadRequestException('Dimensões da imagem muito grandes. Reduza width/height.');
+    if (w * h > MAX_PIXELS) {
+      throw new BadRequestException(
+        'Dimensões da imagem muito grandes. Reduza width/height.',
+      );
     }
 
     return { width: w, height: h };

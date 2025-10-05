@@ -12,7 +12,7 @@ import { NasaConfigService } from './nasa.config';
       cache: true,
       expandVariables: true,
       validationSchema: envValidationSchema,
-      envFilePath: ['.env'], // ajuste se usar múltiplos arquivos
+      envFilePath: ['.env'],
     }),
   ],
   providers: [AppConfigService, NasaConfigService],
