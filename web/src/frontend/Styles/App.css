@@ -1,0 +1,37 @@
+body{
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f5f5f5;
+    overflow: auto;
+}
+
+/* Scrollbars invisíveis para todos os navegadores */
+* {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar {
+    display: none; /* WebKit (Chrome, Safari, Edge) */
+}
+
+/* Garantir que o overflow ainda funcione */
+html, body {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Media queries para melhor responsividade */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 12px;
+    }
+}
