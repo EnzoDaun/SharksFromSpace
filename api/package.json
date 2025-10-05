@@ -10,7 +10,8 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "build": "nest build",
+    "build": "tsc && echo '{\"name\":\"api-serverless\",\"version\":\"1.0.0\",\"main\":\"serverless.js\",\"engines\":{\"node\":\">=18.0.0\"}}' > dist/package.json",
+    "build:nest": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
