@@ -23,6 +23,6 @@
     "resolveJsonModule": true,
     "strict": false
   },
-  "include": ["src/**/*", "serverless.ts"],
+  "include": ["src/**/*", "serverless.ts", "api/**/*"],
   "exclude": ["node_modules", "dist", "test"]
 }
