@@ -21,7 +21,8 @@ export class NasaIntegration {
     const url = this.parser.buildChlorophyllGetMapUrl(time, {
       ...partial,
       format: 'image/png',
-      transparent: partial?.transparent ?? true,
+      transparent: partial?.transparent ?? true, // Clorofila: manter transparência
+      styles: partial?.styles || 'default', // garantir styles default
     });
     return this.fetchPng(url);
   }
@@ -36,7 +37,8 @@ export class NasaIntegration {
     const url = this.parser.buildSstGetMapUrl(time, {
       ...partial,
       format: 'image/png',
-      transparent: partial?.transparent ?? true,
+      transparent: partial?.transparent ?? false, // SST: evitar transparência por default
+      styles: partial?.styles || 'default', // garantir styles default
     });
     return this.fetchPng(url);
   }

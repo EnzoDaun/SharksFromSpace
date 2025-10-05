@@ -23,9 +23,9 @@ export class NasaParser {
     const bbox = this.normalizeBBox(opts.bbox);
     const { width, height } = this.normalizeSize(opts.width, opts.height, bbox);
 
-    const format: ImgFormat = NasaFormatEnum.PNG as ImgFormat;
+    const format: ImgFormat = opts.format ?? (NasaFormatEnum.PNG as ImgFormat);
     const transparent = opts.transparent ?? true;
-    const styles = opts.styles ?? '';
+    const styles = opts.styles || 'default'; // usar 'default' em vez de string vazia
 
     const qs = new URLSearchParams({
       service: 'WMS',
@@ -42,7 +42,7 @@ export class NasaParser {
       time,
     });
 
-    console.log('qs', qs.toString());
+    console.log('🔧 Parser URL gerada:', `${this.nasaCfg.baseUrl}?${qs.toString()}`);
 
     return `${this.nasaCfg.baseUrl}?${qs.toString()}`;
   }
