@@ -37,22 +37,25 @@ const cardData = [
 export default function Hub() {
     const handleCardClick = (cardTitle) => {
         if (cardTitle === 'More Info') {
-            const infoSection = document.querySelector('#info-section');
-            if (infoSection) {
-                infoSection.scrollIntoView({behavior: 'smooth'});
+            const moreInfoSection = document.querySelector('#more-info-section');
+            if (moreInfoSection) {
+                moreInfoSection.scrollIntoView({behavior: 'smooth'});
+            }
+        } else if (cardTitle === 'Satellite Analysis') {
+            const analysisSection = document.querySelector('#satellite-analysis');
+            if (analysisSection) {
+                analysisSection.scrollIntoView({behavior: 'smooth'});
             }
         } else if (cardTitle === 'About US') {
             const aboutUsSection = document.querySelector('#about-us');
             if (aboutUsSection) {
                 aboutUsSection.scrollIntoView({behavior: 'smooth'});
             }
-        } else {
-            console.log(`Navegando para: ${cardTitle}`);
         }
     };
 
     return (
-        <Box id="hub-section" sx={{width: '100%', overflow: 'visible'}}>-
+        <Box id="info-section" sx={{width: '100%', overflow: 'visible'}}>-
             <Box
                 sx={{
                     display: 'flex',
