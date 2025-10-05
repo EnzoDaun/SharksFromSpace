@@ -1,48 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { GetChlorophyllMapUseCase } from '../../nasa/usecases/get-chlorophyll-map.usecase';
-import { GetSstMapUseCase } from '../../nasa/usecases/get-sst-map.usecase';
+import { BuildWmsUrlUseCase } from '../../nasa/usecases/build-wms-url.usecase';
+import { NasaConfigService } from '../../common/config/nasa.config';
 import { OpenAIParser } from '../parser/openai.parser';
 import { OpenAIIntegration } from '../integration/openai.integration';
-import { OpenAIAnalysis } from '../interfaces/openai-analysis.interface';
 
 @Injectable()
 export class AnalyzeSharkProbabilityUseCase {
   constructor(
-    private readonly getChla: GetChlorophyllMapUseCase,
-    private readonly getSst: GetSstMapUseCase,
+    private readonly buildUrl: BuildWmsUrlUseCase,
+    private readonly nasaCfg: NasaConfigService,
     private readonly parser: OpenAIParser,
     private readonly openai: OpenAIIntegration,
   ) {}
 
-  async execute(time: string, regionHint?: string): Promise<{
-    time: string;
-    chlorophyll: { url: string; dataUrl: string };
-    sst: { url: string; dataUrl: string };
-    analysis: OpenAIAnalysis;
-  }> {
-    const [chla, sst] = await Promise.all([
-      this.getChla.execute(time, { width: 1280, transparent: true }),
-      this.getSst.execute(time, { width: 1280, transparent: true }),
-    ]);
-
-    const chlaDataUrl = `data:${chla.contentType};base64,${chla.buffer.toString('base64')}`;
-    const sstDataUrl = `data:${sst.contentType};base64,${sst.buffer.toString('base64')}`;
-
-    const messages = this.parser.buildMessages({
-      time,
-      regionHint,
-      chlorophyllDataUrl: chlaDataUrl,
-      sstDataUrl,
+  /**
+   * Monta as URLs WMS (PNG) para clorofila e SST, envia ao Assistant e retorna o HTML final.
+   * Mantemos proporções do bbox padrão (mundo) — o WMS renderiza corretamente.
+   */
+  async execute(time: string, regionHint?: string): Promise<string> {
+    // 1) URLs WMS em PNG
+    const chlaUrl = this.buildUrl.chlorophyllUrl(time, {
+      format: 'image/png',
+      transparent: true, // clorofila com alpha útil
+      width: 1280,
+      // height opcional: se não enviar, o parser usa proporção do bbox
     });
 
-    const content = await this.openai.chatCompletionsJSON(messages);
-    const analysis = this.parser.safeParse(content);
+    const sstUrl = this.buildUrl.sstUrl(time, {
+      format: 'image/png',
+      transparent: false, // SST opaca para evitar aparência "branca" por alpha
+      width: 1280,
+    });
 
-    return {
-      time,
-      chlorophyll: { url: chla.url, dataUrl: chlaDataUrl },
-      sst: { url: sst.url, dataUrl: sstDataUrl },
-      analysis,
-    };
+    // 2) Texto curto do usuário (o prompt principal está no Assistant)
+    const userText = this.parser.buildUserTextForAssistant({ time, regionHint });
+
+    // 3) Chama Assistants API e retorna HTML
+    const html = await this.openai.runAssistantHtml({
+      userText,
+      imageUrls: [chlaUrl, sstUrl],
+      temperature: 0.2,
+      maxOutputTokens: 1500,
+    });
+
+    return html;
   }
 }
