@@ -1,13 +1,15 @@
-export type BBox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
-export type ImgFormat = 'image/png' | 'image/jpeg';
+import { NasaFormatEnum } from '../enums/nasa-format.enum';
+import { NasaStylesEnum } from '../enums/nasa-styles.enum';
+
+export type BBox = readonly [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 
 export interface BuildWmsUrlOptions {
   layer: string;
-  time: string;                 // YYYY-MM-DD
-  bbox?: BBox;                  // default: world
-  width?: number;               // default: 1920
-  height?: number;              // default: 960 (mantém proporção)
-  format?: ImgFormat;           // default: config.defaultFormat
-  transparent?: boolean;        // default: true
-  styles?: string;              // default: ''
+  time: string;
+  bbox?: BBox;
+  width?: number;
+  height?: number;
+  format?: NasaFormatEnum;
+  transparent?: boolean;
+  styles?: NasaStylesEnum | string;
 }

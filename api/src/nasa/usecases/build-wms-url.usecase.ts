@@ -10,15 +10,10 @@ export class BuildWmsUrlUseCase {
     private readonly nasaCfg: NasaConfigService,
   ) {}
 
-  /**
-   * Constrói URL WMS para a camada informada (genérico).
-   * Útil para logs, debug, ou se você quiser retornar { url } para o front baixar direto.
-   */
   buildUrl(opts: BuildWmsUrlOptions): string {
     return this.parser.buildGetMapUrl(opts);
   }
 
-  /** URL da clorofila-a (fitoplâncton) */
   chlorophyllUrl(
     time: string,
     partial?: Omit<BuildWmsUrlOptions, 'layer' | 'time'>,
@@ -30,7 +25,6 @@ export class BuildWmsUrlUseCase {
     });
   }
 
-  /** URL da SST (Temperatura da Superfície do Mar) */
   sstUrl(
     time: string,
     partial?: Omit<BuildWmsUrlOptions, 'layer' | 'time'>,
