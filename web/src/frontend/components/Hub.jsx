@@ -42,7 +42,7 @@ export default function Hub() {
 	};
 
 	return (
-		<Box id="hub-section">
+		<Box id="hub-section" sx={{ width: '100%', overflow: 'visible' }}>
 			<BubbleBG>
 				<Box
 					sx={{
@@ -51,9 +51,12 @@ export default function Hub() {
 						alignItems: 'center',
 						justifyContent: 'flex-start',
 						minHeight: '100vh',
-						padding: { xs: 1, sm: 2, md: 3 },
-						paddingTop: { xs: '10%', sm: '8%', md: '6%' },
+						padding: { xs: 2, sm: 3 },
+						paddingTop: { xs: '10%', sm: '6%' },
+						paddingBottom: { xs: '5%', sm: '3%' },
 						textAlign: 'center',
+						width: '100%',
+						boxSizing: 'border-box',
 					}}
 				>
 					{/* Título principal */}
@@ -65,13 +68,12 @@ export default function Hub() {
 							textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
 							fontSize: {
 								xs: '2rem',
-								sm: '2.8rem',
-								md: '3.5rem',
+								sm: '3.5rem',
 								lg: '4rem',
 							},
 							mb: 2,
 							textTransform: 'uppercase',
-							letterSpacing: { xs: 1, md: 2 },
+							letterSpacing: { xs: 1, sm: 2 },
 						}}
 					>
 						Let's start Exploring
@@ -86,14 +88,13 @@ export default function Hub() {
 							textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
 							fontSize: {
 								xs: '1rem',
-								sm: '1.2rem',
-								md: '1.5rem',
+								sm: '1.5rem',
 								lg: '1.8rem',
 							},
-							maxWidth: { xs: '90%', sm: '80%', md: '70%' },
+							maxWidth: { xs: '90%', sm: '70%' },
 							lineHeight: 1.4,
 							letterSpacing: 0.5,
-							mb: { xs: 4, md: 6 },
+							mb: { xs: 4, sm: 6 },
 						}}
 					>
 						Find your way throughout our website
@@ -102,39 +103,40 @@ export default function Hub() {
 					{/* Cards Section */}
 					<Grid
 						container
-						spacing={{ xs: 3, md: 4 }}
+						spacing={{ xs: 3, sm: 4, md: 4 }}
 						sx={{
 							maxWidth: '1400px',
 							width: '100%',
 							px: { xs: 1, sm: 2 },
 							justifyContent: 'center',
+							mb: { xs: 3, sm: 0 },
 						}}
 					>
 						{cardData.map((card) => (
-							<Grid item xs={12} md={4} key={card.id}>
+							<Grid item xs={12} sm={4} md={4} key={card.id}>
 								<Card
 									sx={{
-										background: 'rgba(255, 255, 255, 0.1)',
+										background: 'rgba(255, 255, 255, 0.04)',
 										backdropFilter: 'blur(10px)',
 										borderRadius: '20px',
-										border: '1px solid rgba(255, 255, 255, 0.2)',
+										border: '1px solid rgba(255, 255, 255, 0.12)',
 										boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
 										transition: 'all 0.3s ease',
-										height: '100%',
-										minHeight: { xs: 'auto', md: '380px' },
-										maxHeight: { md: '380px' },
+										height: { xs: '380px', sm: '380px', md: '380px' }, // Altura consistente
+										width: '100%',
+										maxWidth: { xs: '350px', sm: '300px', md: '350px' }, // Largura otimizada para cada breakpoint
+										margin: '0 auto',
 										display: 'flex',
 										flexDirection: 'column',
 										'&:hover': {
 											transform: 'translateY(-8px)',
 											boxShadow: '0 12px 40px rgba(255, 59, 129, 0.2)',
-											background: 'rgba(255, 255, 255, 0.15)',
+											background: 'rgba(255, 255, 255, 0.08)',
 										},
 									}}
 								>
 									<CardMedia
 										component="img"
-										height="150"
 										image={card.image}
 										alt={card.alt}
 										sx={{
@@ -142,8 +144,8 @@ export default function Hub() {
 											borderRadius: '20px 20px 0 0',
 											filter: 'brightness(0.9)',
 											height: '150px',
-											minHeight: '150px',
-											maxHeight: '150px',
+											width: '100%',
+											flexShrink: 0,
 										}}
 									/>
 									<CardContent
@@ -151,13 +153,14 @@ export default function Hub() {
 											flexGrow: 1,
 											display: 'flex',
 											flexDirection: 'column',
-											padding: { xs: 2, md: 2.5 },
+											padding: { xs: 2, sm: 2, md: 2.5 }, // Padding consistente
 											paddingBottom: '20px !important',
-											height: 'calc(100% - 150px)',
 											justifyContent: 'space-between',
+											width: '100%',
+											boxSizing: 'border-box',
 										}}
 									>
-										<Box>
+										<Box sx={{ width: '100%' }}>
 											<Typography
 												variant="h5"
 												sx={{
@@ -166,9 +169,10 @@ export default function Hub() {
 													textTransform: 'uppercase',
 													letterSpacing: 1,
 													mb: 1.5,
-													fontSize: { xs: '1.1rem', md: '1.3rem' },
+													fontSize: { xs: '1.1rem', sm: '1.2rem', md: '1.3rem' }, // Tamanho progressivo
 													textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
 													textAlign: 'center',
+													width: '100%',
 												}}
 											>
 												{card.title}
@@ -180,10 +184,14 @@ export default function Hub() {
 													color: 'rgba(255, 255, 255, 0.85)',
 													lineHeight: 1.4,
 													mb: 2,
-													fontSize: { xs: '0.85rem', md: '0.95rem' },
+													fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' }, // Tamanho progressivo
 													textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
 													textAlign: 'center',
-													minHeight: { md: '45px' },
+													height: '45px',
+													display: 'flex',
+													alignItems: 'center',
+													justifyContent: 'center',
+													width: '100%',
 												}}
 											>
 												{card.subtitle}
@@ -195,16 +203,12 @@ export default function Hub() {
 												display: 'flex',
 												justifyContent: 'center',
 												mt: 'auto',
+												width: '100%',
 											}}
 										>
 											<HeroButton
 												onClick={() => handleCardClick(card.title)}
-												sx={{
-													transform: 'scale(0.8)',
-												}}
-											>
-												Let's Go
-											</HeroButton>
+											/>
 										</Box>
 									</CardContent>
 								</Card>

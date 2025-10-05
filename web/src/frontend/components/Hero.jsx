@@ -3,17 +3,10 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {
-  IconButton,
   Button,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   useTheme,
   useMediaQuery
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import HeroButton from "./HeroButton.jsx";
 import SharkBG from '../assets/SharkBG.png';
 import SpaceSharkLogo from '../assets/SpaceSharkLogo.png';
@@ -25,19 +18,19 @@ const navItems = [
 ];
 
 export default function Hero() {
-    const [mobileOpen, setMobileOpen] = useState(false);
     const [activeItem, setActiveItem] = useState('');
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Mudando para sm para incluir tablets pequenos
 
     const heroStyle = {
         position: 'relative',
         width: '100%',
-        minHeight: '100vh',
+        height: '100vh',
         backgroundImage: `url(${SharkBG})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundPosition: isMobile ? '64% center' : '60% center', // Ajustando posição para desktop/tablet
         backgroundRepeat: 'no-repeat',
+        overflow: 'hidden',
     };
 
     const handleButtonClick = () => {
@@ -48,53 +41,10 @@ export default function Hero() {
         }
     };
 
-    const handleDrawerToggle = () => {
-        setMobileOpen((prevState) => !prevState);
-    };
-
     const handleNavClick = (itemId) => {
         setActiveItem(itemId);
         console.log(`Navegando para: ${itemId}`);
     };
-
-    const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-          <Typography variant="h6" sx={{ my: 2, color: '#fff' }}>
-            Navigation
-          </Typography>
-          <List>
-            {navItems.map((item) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton
-                  onClick={() => handleNavClick(item.id)}
-                  sx={{
-                    textAlign: 'center',
-                    color: '#fff',
-                    backgroundColor: activeItem === item.id ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-                    borderLeft: activeItem === item.id ? '4px solid #ff3b81' : 'none',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    },
-                    '&:focus': {
-                      outline: '2px solid #ff3b81',
-                      outlineOffset: '2px',
-                    }
-                  }}
-                >
-                  <ListItemText
-                    primary={item.text}
-                    sx={{
-                      textTransform: 'uppercase',
-                      fontWeight: 600,
-                      letterSpacing: 1
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-    );
 
     return (
         <>
@@ -111,29 +61,29 @@ export default function Hero() {
                     }}
                 />
 
-                {/* Logo e NavBar lado a lado */}
+                {/* Logo e NavBar - Layout específico para cada dispositivo */}
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: { xs: '5%', sm: '8%', md: '12%' },
-                        left: { xs: '2%', sm: '4%', md: '18%' },
-                        right: { xs: '2%', sm: '4%' },
+                        top: { xs: '4%', sm: '20%', md: '20%', lg: '12%' }, // 20% para tablet e laptop, 12% para desktop
+                        left: { xs: '4%', sm: '10%', md: '10%', lg: '18%' }, // 10% para tablet e laptop, 18% para desktop
                         zIndex: 3,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: { xs: 2, sm: 3, md: 4 },
-                        flexWrap: { xs: 'wrap', md: 'nowrap' },
+                        gap: { xs: 2, sm: 4, md: 4, lg: 4 },
+                        flexWrap: 'nowrap',
                     }}
                 >
-                    {/* Logo maior com efeito hover */}
+                    {/* Logo */}
                     <Box
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
                             cursor: 'pointer',
                             transition: 'all 0.3s ease',
+                            flexShrink: 0,
                             '&:hover': {
-                                transform: 'scale(1.1)',
+                                transform: 'scale(1.6)',
                                 filter: 'brightness(1.2) contrast(1.1)',
                                 '& img': {
                                     filter: 'drop-shadow(0 4px 8px rgba(255, 59, 129, 0.3))',
@@ -154,120 +104,124 @@ export default function Hero() {
                         />
                     </Box>
 
-                    {/* Links de navegação ao lado da logo (desktop) */}
-                    {!isMobile && (
-                        <Box sx={{
-                            display: 'flex',
-                            gap: { sm: 2, md: 3 },
-                            flexWrap: 'wrap'
-                        }}>
-                            {navItems.map((item) => (
-                                <Button
-                                    key={item.text}
-                                    onClick={() => handleNavClick(item.id)}
-                                    sx={{
-                                        color: '#fff',
-                                        textTransform: 'uppercase',
-                                        fontWeight: 600,
-                                        letterSpacing: 1,
-                                        px: { xs: 0, sm: 1 },
-                                        py: 1,
-                                        minWidth: 'auto',
-                                        fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' },
-                                        transition: 'all 0.3s ease',
-                                        position: 'relative',
+                    {/* Navigation - diretamente ao lado do logo em desktop, tablet e laptop */}
+                    <Box sx={{
+                        display: { xs: 'none', sm: 'flex', md: 'flex' }, // Oculta no mobile
+                        gap: { sm: 3, md: 3 }, // Same gap for tablet and desktop
+                        alignItems: 'center',
+                        flexShrink: 0,
+                    }}>
+                        {navItems.map((item) => (
+                            <Button
+                                key={item.text}
+                                onClick={() => handleNavClick(item.id)}
+                                sx={{
+                                    color: '#fff',
+                                    textTransform: 'uppercase',
+                                    fontWeight: 600,
+                                    letterSpacing: { sm: 1, md: 1 }, // Same spacing for tablet and desktop
+                                    px: { sm: 1.5, md: 1.5 }, // Same padding for tablet and desktop
+                                    py: { sm: 1, md: 1 }, // Same padding for tablet and desktop
+                                    minWidth: 'auto',
+                                    fontSize: { sm: '1rem', md: '1rem' }, // Same font size for tablet and desktop
+                                    transition: 'all 0.3s ease',
+                                    position: 'relative',
+                                    backgroundColor: 'transparent',
+                                    whiteSpace: 'nowrap',
+                                    '&:hover': {
                                         backgroundColor: 'transparent',
-                                        '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            color: '#ff3b81',
-                                            transform: 'translateY(-2px)',
-                                        },
-                                        '&:focus': {
-                                            outline: '2px solid #ff3b81',
-                                            outlineOffset: '2px',
-                                        },
-                                        ...(activeItem === item.id && {
-                                            color: '#ff3b81',
-                                            '&::after': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                bottom: 0,
-                                                left: '0',
-                                                width: '100%',
-                                                height: '2px',
-                                                backgroundColor: '#ff3b81',
-                                                borderRadius: '1px',
-                                            }
-                                        })
-                                    }}
-                                >
-                                    {item.text}
-                                </Button>
-                            ))}
-                        </Box>
-                    )}
+                                        color: '#ff3b81',
+                                        transform: 'translateY(-2px)',
+                                    },
+                                    '&:focus': {
+                                        outline: '2px solid #ff3b81',
+                                        outlineOffset: '2px',
+                                    },
+                                    ...(activeItem === item.id && {
+                                        color: '#ff3b81',
+                                        '&::after': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: '0',
+                                            width: '100%',
+                                            height: '2px',
+                                            backgroundColor: '#ff3b81',
+                                            borderRadius: '1px',
+                                        }
+                                    })
+                                }}
+                            >
+                                {item.text}
+                            </Button>
+                        ))}
+                    </Box>
+
+                    {/* Navigation buttons para mobile - ao lado do logo */}
+                    <Box sx={{
+                        display: { xs: 'flex', sm: 'none' },
+                        gap: { xs: 1 },
+                        alignItems: 'center',
+                        flexShrink: 0,
+                    }}>
+                        {navItems.map((item) => (
+                            <Button
+                                key={item.text}
+                                onClick={() => handleNavClick(item.id)}
+                                sx={{
+                                    color: '#fff',
+                                    textTransform: 'uppercase',
+                                    fontWeight: 600,
+                                    letterSpacing: 0.5,
+                                    px: 0.8,
+                                    py: 0.8,
+                                    minWidth: 'auto',
+                                    fontSize: '1rem',
+                                    transition: 'all 0.3s ease',
+                                    position: 'relative',
+                                    backgroundColor: 'transparent',
+                                    whiteSpace: 'nowrap',
+                                    '&:hover': {
+                                        backgroundColor: 'transparent',
+                                        color: '#ff3b81',
+                                        transform: 'translateY(-2px)',
+                                    },
+                                    '&:focus': {
+                                        outline: '2px solid #ff3b81',
+                                        outlineOffset: '2px',
+                                    },
+                                    ...(activeItem === item.id && {
+                                        color: '#ff3b81',
+                                        '&::after': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: '0',
+                                            width: '100%',
+                                            height: '2px',
+                                            backgroundColor: '#ff3b81',
+                                            borderRadius: '1px',
+                                        }
+                                    })
+                                }}
+                            >
+                                {item.text}
+                            </Button>
+                        ))}
+                    </Box>
                 </Box>
 
-                {/* Menu hambúrguer (mobile) */}
-                {isMobile && (
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: { xs: '5%', sm: '8%' },
-                            right: { xs: '2%', sm: '4%' },
-                            zIndex: 3,
-                        }}
-                    >
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleDrawerToggle}
-                            sx={{
-                                color: '#fff',
-                                padding: { xs: '8px', sm: '12px' },
-                                '&:focus': {
-                                    outline: '2px solid #ff3b81',
-                                    outlineOffset: '2px',
-                                }
-                            }}
-                        >
-                            <MenuIcon sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }} />
-                        </IconButton>
-                    </Box>
-                )}
-
-                {/* Drawer para mobile */}
-                <Drawer
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
-                    sx={{
-                        display: { xs: 'block', md: 'none' },
-                        '& .MuiDrawer-paper': {
-                            boxSizing: 'border-box',
-                            width: 240,
-                            backgroundColor: 'rgba(0, 34, 68, 0.95)',
-                            backdropFilter: 'blur(10px)',
-                        },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-
-                {/* Título principal - posição original com melhor responsividade */}
+                {/* Título principal - layout consistente */}
                 <Box
                     sx={{
                         position: 'absolute',
-                        left: { xs: '2%', sm: '4%', md: '18%' },
-                        right: { xs: '2%', sm: '4%' },
-                        top: { xs: '15%', sm: '18%', md: '40%' },
-                        maxWidth: { xs: '96%', sm: '92%', md: 480 },
+                        left: { xs: '2%', sm: '18%', md: '18%' }, // Same left position for tablet and desktop
+                        right: { xs: '4%', sm: '4%' },
+                        top: { xs: '22%', sm: '40%', md: '40%' }, // Same top position for tablet and desktop
+                        maxWidth: { xs: '92%', sm: 480, md: 480 }, // Same maxWidth for tablet and desktop
                         color: '#fff',
                         zIndex: 2,
-                        padding: { xs: '0 8px', sm: '0 16px', md: 0 },
+                        textAlign: { xs: 'center', sm: 'left', md: 'left' }, // Same alignment for tablet and desktop
                     }}
                 >
                     <Typography
@@ -276,28 +230,36 @@ export default function Hero() {
                             margin: 0,
                             fontWeight: 800,
                             textTransform: 'uppercase',
-                            lineHeight: { xs: 0.85, sm: 0.9, md: 0.92 },
-                            letterSpacing: { xs: 0.5, sm: 0.8, md: 1 },
+                            lineHeight: { xs: 1, sm: 0.92, md: 0.92 }, // Same lineHeight for tablet and desktop
+                            letterSpacing: { xs: 1, sm: 1, md: 1 }, // Same letterSpacing for tablet and desktop
                             fontSize: {
-                                xs: '1.8rem',
-                                sm: '2.5rem',
+                                xs: '2rem',
+                                sm: '3.5rem', // Same as desktop
                                 md: '3.5rem',
                                 lg: '4.8rem'
                             },
-                            whiteSpace: 'pre-line',
-                            textAlign: { xs: 'left', md: 'left' },
+                            whiteSpace: { xs: 'nowrap', sm: 'pre-line', md: 'pre-line' }, // Same for tablet and desktop
+                            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
                         }}
                     >
-                        SHARKS{'\n'}FROM{'\n'}SPACE
+                        {isMobile ? 'SHARKS FROM SPACE' : 'SHARKS\nFROM\nSPACE'}
                     </Typography>
+                </Box>
 
-                    <Box sx={{
-                        mt: { xs: 2, sm: 2.5, md: 3 },
+                {/* Botão - posição idêntica para tablet e desktop */}
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        left: { xs: '4%', sm: '18%', md: '18%' }, // Same left position for tablet and desktop
+                        right: { xs: '4%', sm: '4%' },
+                        bottom: { xs: '12%', sm: 'auto', md: 'auto' },
+                        top: { xs: 'auto', sm: '78%', md: '78%' }, // Same top position for tablet e desktop
+                        zIndex: 2,
                         display: 'flex',
-                        justifyContent: { xs: 'center', sm: 'flex-start' }
-                    }}>
-                        <HeroButton onClick={handleButtonClick} />
-                    </Box>
+                        justifyContent: { xs: 'center', sm: 'flex-start', md: 'flex-start' },
+                    }}
+                >
+                    <HeroButton onClick={handleButtonClick} />
                 </Box>
             </Box>
         </>
