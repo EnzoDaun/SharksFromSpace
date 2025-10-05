@@ -70,7 +70,7 @@ export default function Hero() {
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: {xs: '4%', sm: '20%', md: '20%', lg: '12%'},
+                        top: {xs: '4%', sm: '20%', md: '20%', lg: '20%'},
                         left: {xs: '4%', sm: '10%', md: '10%', lg: '18%'},
                         zIndex: 3,
                         display: 'flex',
