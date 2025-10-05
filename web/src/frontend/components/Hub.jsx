@@ -5,7 +5,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
-import BubbleBG from './BubbleBG.jsx';
 import HeroButton from './HeroButton.jsx';
 // Importando as imagens
 import satelliteImg from '../assets/satellite.png';
@@ -42,8 +41,7 @@ export default function Hub() {
 	};
 
 	return (
-		<Box id="hub-section" sx={{ width: '100%', overflow: 'visible' }}>
-			<BubbleBG>
+		<Box id="hub-section" sx={{ width: '100%', overflow: 'visible' }}>-
 				<Box
 					sx={{
 						display: 'flex',
@@ -216,7 +214,6 @@ export default function Hub() {
 						))}
 					</Grid>
 				</Box>
-			</BubbleBG>
 		</Box>
 	);
 }
