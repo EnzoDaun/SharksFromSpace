@@ -1,9 +1,10 @@
 import { Matches, IsOptional, IsString, IsInt, Min, Max, IsBoolean } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { BBox } from '../../nasa/interfaces/nasa-map-request.interface';
+import { DATE_REGEX } from '../../common/constants/nasa.constants';
 
 export class AnalyzePredictionDto {
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+  @Matches(DATE_REGEX, {
     message: 'time deve estar no formato YYYY-MM-DD',
   })
   time!: string;
@@ -73,7 +74,7 @@ export class AnalyzePredictionDto {
   /**
    * Constrói opções parciais para as URLs WMS.
    */
-  toWmsOptions() {
+  toWmsOptions(): any {
     const opts: any = {};
     const bboxTuple = this.toBBox();
     if (bboxTuple) opts.bbox = bboxTuple;

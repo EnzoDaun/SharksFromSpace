@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { BuildWmsUrlUseCase } from '../../nasa/usecases/build-wms-url.usecase';
 import { OpenAIParser } from '../parser/openai.parser';
 import { OpenAIIntegration } from '../integration/openai.integration';
+import { NasaFormatEnum } from '../../nasa/enums/nasa-format.enum';
+import { NasaStylesEnum } from '../../nasa/enums/nasa-styles.enum';
 
 @Injectable()
 export class AnalyzeSharkProbabilityUseCase {
@@ -13,6 +15,8 @@ export class AnalyzeSharkProbabilityUseCase {
 
   /**
    * Monta as URLs WMS (PNG) para clorofila e SST, envia ao Assistant e retorna apenas o HTML.
+   * Orquestra sem duplicar construção de URL (sempre via parser/build...Url).
+   * Não chama fetch direto — usa a NasaIntegration.
    */
   async execute(
     time: string,
@@ -21,9 +25,9 @@ export class AnalyzeSharkProbabilityUseCase {
   ): Promise<{ html: string }> {
     // Defaults para garantir consistência com as rotas diretas
     const baseOptions = {
-      format: 'image/png' as const,
+      format: NasaFormatEnum.PNG,
       width: 1280,
-      styles: 'default',
+      styles: NasaStylesEnum.DEFAULT,
       ...wmsOptions, // permite override dos parâmetros
     };
 

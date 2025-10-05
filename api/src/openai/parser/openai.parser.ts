@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { OpenAIAssistantPartType } from '../enums/assistant-message.enum';
+import { AssistantMessagePart } from '../interfaces/assistant-message.interface';
 
 @Injectable()
 export class OpenAIParser {
@@ -7,17 +9,46 @@ export class OpenAIParser {
    * As instruções principais (HTML-only, seções, etc.) devem estar no Assistant (Instructions).
    * Aqui passamos apenas o contexto dinâmico (data, região) e indicamos que 2 imagens foram anexadas.
    */
-  buildUserTextForAssistant(params: { time: string; regionHint?: string }) {
+  buildUserTextForAssistant(params: { time: string; regionHint?: string }): string {
     const { time, regionHint } = params;
 
     const lines = [
       `Data (UTC): ${time}`,
       regionHint ? `Região (dica opcional): ${regionHint}` : undefined,
-      'AnexeI duas imagens nesta mensagem: (1) clorofila-a; (2) SST.',
+      'Anexei duas imagens nesta mensagem: (1) clorofila-a; (2) SST.',
       'Use APENAS essas duas imagens para a análise solicitada nas Instructions do Assistant.',
     ].filter(Boolean) as string[];
 
     return lines.join('\n');
+  }
+
+  /**
+   * Extrai HTML da resposta do assistant, removendo code fences se vierem
+   */
+  extractHtmlFromAssistant(messagesListJson: any): string {
+    const msg = (messagesListJson?.data ?? []).find((m: any) => m.role === 'assistant');
+    if (!msg) {
+      throw new Error('Assistant returned no message.');
+    }
+
+    const parts = (msg.content ?? []) as AssistantMessagePart[];
+    const htmlChunks: string[] = [];
+
+    for (const part of parts) {
+      if (part.type === OpenAIAssistantPartType.TEXT && typeof part.text?.value === 'string') {
+        htmlChunks.push(part.text.value);
+      }
+    }
+
+    let html = htmlChunks.join('\n').trim();
+    if (!html) {
+      throw new Error('Assistant returned empty HTML.');
+    }
+    
+    // Remove code fences HTML se vierem
+    html = html.replace(/```html\s*/g, '').replace(/```\s*$/g, '').trim();
+    
+    return html;
   }
 
   /**
