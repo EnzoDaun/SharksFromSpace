@@ -41,11 +41,6 @@ export default function Hub() {
             if (infoSection) {
                 infoSection.scrollIntoView({behavior: 'smooth'});
             }
-        } else if (cardTitle === 'Satellite Analysis') {
-            const satelliteSection = document.querySelector('#satellite-data-section');
-            if (satelliteSection) {
-                satelliteSection.scrollIntoView({behavior: 'smooth'});
-            }
         } else {
             console.log(`Navegando para: ${cardTitle}`);
         }
