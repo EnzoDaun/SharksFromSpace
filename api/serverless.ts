@@ -3,22 +3,18 @@ import { AppModule } from './src/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import express from 'express';
-import { Request, Response } from 'express';
+import serverlessExpress from '@vendia/serverless-express';
 
-let app: any = null;
+let cachedServer: ReturnType<typeof serverlessExpress> | null = null;
 
-async function createNestApp() {
-  if (app) {
-    return app;
-  }
-
+async function createServer() {
   try {
     console.log('Creating NestJS application...');
     
     const expressApp = express();
     const adapter = new ExpressAdapter(expressApp);
     
-    app = await NestFactory.create(AppModule, adapter, {
+    const app = await NestFactory.create(AppModule, adapter, {
       logger: ['error', 'warn', 'log'],
     });
 
@@ -28,19 +24,21 @@ async function createNestApp() {
       whitelist: true,
     }));
 
-    // Enable CORS
+    // Enable CORS for Vercel domains
     app.enableCors({
-      origin: true,
+      origin: [/\.vercel\.app$/],
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
     });
 
-    // Initialize the app
+    // Initialize the app without listening
     await app.init();
     
     console.log('NestJS app initialized successfully');
-    return app;
+    
+    // Return serverless express handler
+    return serverlessExpress({ app: expressApp });
     
   } catch (error: any) {
     console.error('Error creating NestJS app:', error);
@@ -48,14 +46,15 @@ async function createNestApp() {
   }
 }
 
-export default async function handler(req: Request, res: Response) {
+export default async function handler(req: any, res: any) {
   try {
     console.log(`${req.method} ${req.url}`);
     
-    const nestApp = await createNestApp();
-    const server = nestApp.getHttpAdapter().getInstance();
+    if (!cachedServer) {
+      cachedServer = await createServer();
+    }
     
-    return server(req, res);
+    return cachedServer(req, res);
     
   } catch (error: any) {
     console.error('Handler error:', error);
