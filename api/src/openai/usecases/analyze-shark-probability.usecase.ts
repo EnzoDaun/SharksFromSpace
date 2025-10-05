@@ -12,14 +12,13 @@ export class AnalyzeSharkProbabilityUseCase {
   ) {}
 
   /**
-   * Monta as URLs WMS (PNG) para clorofila e SST, envia ao Assistant e retorna:
-   * { time, images: { chlorophyllUrl, sstUrl }, html }
+   * Monta as URLs WMS (PNG) para clorofila e SST, envia ao Assistant e retorna apenas o HTML.
    */
   async execute(
     time: string,
     regionHint?: string,
     wmsOptions?: any, // opções vindas do DTO para manter consistência
-  ): Promise<{ time: string; images: { chlorophyllUrl: string; sstUrl: string }; html: string }> {
+  ): Promise<{ html: string }> {
     // Defaults para garantir consistência com as rotas diretas
     const baseOptions = {
       format: 'image/png' as const,
@@ -39,10 +38,6 @@ export class AnalyzeSharkProbabilityUseCase {
       transparent: baseOptions.transparent ?? false, // evitar aparência "branca" por alpha na SST
     });
 
-    console.log('🔍 OpenAI URLs geradas:');
-    console.log('  Chlorophyll:', chlorophyllUrl);
-    console.log('  SST:', sstUrl);
-
     // 2) Texto curto do usuário (as Instructions estão no Assistant)
     const userText = this.parser.buildUserTextForAssistant({ time, regionHint });
 
@@ -53,11 +48,6 @@ export class AnalyzeSharkProbabilityUseCase {
     });
 
     return {
-      time,
-      images: {
-        chlorophyllUrl,
-        sstUrl,
-      },
       html,
     };
   }

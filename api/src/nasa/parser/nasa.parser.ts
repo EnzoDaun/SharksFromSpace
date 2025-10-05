@@ -42,8 +42,6 @@ export class NasaParser {
       time,
     });
 
-    console.log('🔧 Parser URL gerada:', `${this.nasaCfg.baseUrl}?${qs.toString()}`);
-
     return `${this.nasaCfg.baseUrl}?${qs.toString()}`;
   }
 
