@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+const Joi = require('joi');
 import { NasaFormatEnum } from '../../nasa/enums/nasa-format.enum';
 import { NasaVersionEnum } from '../../nasa/enums/nasa-version.enum';
 import { NasaCrsEnum } from '../../nasa/enums/nasa-crs.enum';
