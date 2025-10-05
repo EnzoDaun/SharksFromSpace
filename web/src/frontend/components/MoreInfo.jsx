@@ -17,21 +17,21 @@ const sections = [
         title: 'Correlation Between Sharks, Phytoplankton and Temperature',
         image: phytoImg,
         alt: 'Phytoplankton',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        content: 'Ocean temperature influences phytoplankton growth—the foundation of marine food webs—and therefore affects the availability of prey for fish and sharks. Changes in water temperature alter stratification and nutrient supply, shifting where and when phytoplankton blooms occur. Sharks respond both directly to temperature preferences and indirectly by following prey, which can change their migration routes, feeding grounds, and behavior. Understanding this link helps predict how sharks and marine ecosystems will respond to a warming ocean.',
     },
     {
         id: 2,
         title: 'Importance of Sharks and Why We Should Preserve Them',
         image: sharkReefImg,
         alt: 'Shark Reef',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        content: 'Sharks are keystone predators that maintain healthy marine ecosystems by regulating prey, preventing overabundance, and supporting biodiversity. Their presence helps sustain seagrass beds, coral reefs, and productive fish communities, and they contribute to local economies through sustainable ecotourism while offering valuable scientific insights. Many species face steep declines from overfishing, bycatch, habitat loss, and finning; protecting them with MPAs, sustainable fisheries, and stronger regulations is vital for ocean resilience and coastal livelihoods.',
     },
     {
         id: 3,
         title: 'Data-Based Regulation',
         image: sharkImg,
         alt: 'Shark',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        content: 'Data-driven regulation is essential to conserve sharks. Reliable information — catch records, observer programs, satellite and acoustic tagging, eDNA, and standardized surveys — lets managers assess stocks, map critical habitats, quantify bycatch, and set measures like catch limits, time-area closures, and gear restrictions. With sharp declines in many shark and ray populations and millions removed annually, science-led policy is urgent. Priorities include improved reporting and electronic monitoring, expanded tagging and eDNA surveys, transparent data sharing, and adaptive, co-managed rules that balance recovery with fishing livelihoods.',
     },
 ];
 
@@ -169,7 +169,7 @@ export default function MoreInfo() {
                                                 sx={{
                                                     color: 'rgba(255, 255, 255, 0.95)',
                                                     fontSize: '0.95rem',
-                                                    lineHeight: 1.7,
+                                                    lineHeight: 1.4,
                                                     textAlign: 'justify',
                                                     fontWeight: 400,
                                                     textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
@@ -248,7 +248,7 @@ export default function MoreInfo() {
                                                         sx={{
                                                             color: '#fff',
                                                             fontWeight: 700,
-                                                            fontSize: '1.8rem',
+                                                            fontSize: '1.4rem',
                                                             mb: 3,
                                                             lineHeight: 1.3,
                                                             textTransform: 'uppercase',
@@ -303,7 +303,7 @@ export default function MoreInfo() {
                                                         sx={{
                                                             color: '#fff',
                                                             fontWeight: 700,
-                                                            fontSize: '1.8rem',
+                                                            fontSize: '1.4rem',
                                                             mb: 3,
                                                             lineHeight: 1.3,
                                                             textTransform: 'uppercase',
@@ -319,7 +319,7 @@ export default function MoreInfo() {
                                                         sx={{
                                                             color: 'rgba(255, 255, 255, 0.95)',
                                                             fontSize: '1.05rem',
-                                                            lineHeight: 1.7,
+                                                            lineHeight: 1.4,
                                                             textAlign: 'justify',
                                                             fontWeight: 400,
                                                             textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
