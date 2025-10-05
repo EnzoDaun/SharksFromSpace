@@ -7,4 +7,7 @@ export default defineConfig({
         open: true,
         port: 9000
     },
+    css: {
+        postcss: false
+    }
 })
