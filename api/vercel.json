@@ -1,23 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "dist/serverless.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["dist/**"]
-      }
-    }
-  ],
-  "routes": [
-    { 
-      "src": "/(.*)", 
-      "dest": "dist/serverless.js" 
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "installCommand": "npm ci",
-  "buildCommand": "npm run build"
+  "builds": [{ "src": "serverless.ts", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "serverless.ts" }],
+  "functions": {
+    "serverless.ts": { "memory": 1024, "maxDuration": 10 }
+  }
 }
