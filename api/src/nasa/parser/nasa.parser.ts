@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { NasaConfigService } from '../../common/config/nasa.config';
 import { BuildWmsUrlOptions, BBox, ImgFormat } from '../interfaces/nasa-map-request.interface';
+import { NasaFormatEnum } from '../enums/nasa-format.enum';
 
 @Injectable()
 export class NasaParser {
@@ -22,7 +23,7 @@ export class NasaParser {
     const bbox = this.normalizeBBox(opts.bbox);
     const { width, height } = this.normalizeSize(opts.width, opts.height, bbox);
 
-    const format: ImgFormat = (opts.format || this.nasaCfg.defaultFormat) as ImgFormat;
+    const format: ImgFormat = NasaFormatEnum.PNG as ImgFormat;
     const transparent = opts.transparent ?? true;
     const styles = opts.styles ?? '';
 
@@ -40,6 +41,8 @@ export class NasaParser {
       bbox: bbox.join(','),
       time,
     });
+
+    console.log('qs', qs.toString());
 
     return `${this.nasaCfg.baseUrl}?${qs.toString()}`;
   }
