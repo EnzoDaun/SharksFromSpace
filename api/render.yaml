@@ -8,10 +8,30 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
+      # HTTP
+      - key: HTTP_TIMEOUT_MS
         value: 10000
-    # Adicione suas variáveis de ambiente aqui
-    # Você pode configurá-las através do dashboard do Render
-    # ou adicionar aqui como:
-    # - key: OPENAI_API_KEY
-    #   sync: false  # Isso indica que o valor será configurado no dashboard
+      - key: HTTP_RETRY
+        value: 2
+      # NASA
+      - key: NASA_WMS_BASE
+        value: https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi
+      - key: NASA_WMS_VERSION
+        value: 1.3.0
+      - key: NASA_WMS_CRS
+        value: EPSG:4326
+      - key: NASA_LAYER_CHLA
+        value: OCI_PACE_Chlorophyll_a
+      - key: NASA_LAYER_SST
+        value: GHRSST_L4_MUR_Sea_Surface_Temperature
+      - key: NASA_DEFAULT_FORMAT
+        value: image/png
+      # OPENAI - Configure estas no dashboard por segurança
+      - key: OPENAI_API_KEY
+        sync: false  # Será configurado manualmente no dashboard
+      - key: OPENAI_MODEL
+        value: gpt-4o
+      - key: OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: OPENAI_ASSISTANT_ID
+        sync: false  # Será configurado manualmente no dashboard
