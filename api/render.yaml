@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: sharks-from-space-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    # Adicione suas variáveis de ambiente aqui
+    # Você pode configurá-las através do dashboard do Render
+    # ou adicionar aqui como:
+    # - key: OPENAI_API_KEY
+    #   sync: false  # Isso indica que o valor será configurado no dashboard
