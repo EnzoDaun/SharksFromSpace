@@ -1,13 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppConfigService } from './common/config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Enable validation globally
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
+
+  // Enable CORS
+  app.enableCors();
+
   const config = app.get(AppConfigService);
-  const port = config.port;
+  // Use PORT from environment (Render) or fallback to config
+  const port = process.env.PORT || config.port;
 
   await app.listen(port);
 
