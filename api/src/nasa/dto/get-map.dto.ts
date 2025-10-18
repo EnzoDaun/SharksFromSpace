@@ -8,6 +8,7 @@ import {
   IsBoolean,
   Matches,
 } from 'class-validator';
+import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import { NasaFormatEnum } from '../enums/nasa-format.enum';
 import {
   BuildWmsUrlOptions,
@@ -19,19 +20,24 @@ import { DATE_REGEX } from '../constants/nasa.constants';
  * DTO for WMS queries. Used in /nasa/maps and specific endpoints.
  */
 export class GetMapDto {
-  /** Date in ISO format (YYYY-MM-DD) */
+  @ApiProperty({
+    description: 'Data no formato ISO (YYYY-MM-DD)',
+    example: '2024-05-15',
+    required: true,
+  })
   @Matches(DATE_REGEX, {
     message: 'time deve estar no formato YYYY-MM-DD',
   })
   time!: string;
 
-  /** bbox format: "minLon,minLat,maxLon,maxLat" */
+  @ApiHideProperty()
   @IsOptional()
   @Matches(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?$/, {
     message: 'bbox deve ser "minLon,minLat,maxLon,maxLat"',
   })
   bbox?: string;
 
+  @ApiHideProperty()
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -39,6 +45,7 @@ export class GetMapDto {
   @Max(10000)
   width?: number;
 
+  @ApiHideProperty()
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -46,10 +53,12 @@ export class GetMapDto {
   @Max(10000)
   height?: number;
 
+  @ApiHideProperty()
   @IsOptional()
   @IsEnum(NasaFormatEnum)
   format?: NasaFormatEnum;
 
+  @ApiHideProperty()
   @IsOptional()
   @Transform(({ value }) => {
     if (typeof value === 'boolean') return value;

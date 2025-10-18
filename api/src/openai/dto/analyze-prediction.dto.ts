@@ -8,26 +8,34 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
+import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import { BBox } from '../../nasa/interfaces/nasa-map-request.interface';
 import { DATE_REGEX } from '../../nasa/constants/nasa.constants';
 
 export class AnalyzePredictionDto {
+  @ApiProperty({
+    description: 'Data no formato ISO (YYYY-MM-DD)',
+    example: '2024-05-15',
+    required: true,
+  })
   @Matches(DATE_REGEX, {
     message: 'time deve estar no formato YYYY-MM-DD',
   })
   time!: string;
 
+  @ApiHideProperty()
   @IsOptional()
   @IsString()
   regionHint?: string;
 
-  /** bbox format: "minLon,minLat,maxLon,maxLat" */
+  @ApiHideProperty()
   @IsOptional()
   @Matches(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?$/, {
     message: 'bbox deve ser "minLon,minLat,maxLon,maxLat"',
   })
   bbox?: string;
 
+  @ApiHideProperty()
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -35,6 +43,7 @@ export class AnalyzePredictionDto {
   @Max(10000)
   width?: number;
 
+  @ApiHideProperty()
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -42,6 +51,7 @@ export class AnalyzePredictionDto {
   @Max(10000)
   height?: number;
 
+  @ApiHideProperty()
   @IsOptional()
   @Transform(({ value }) => {
     if (typeof value === 'boolean') return value;

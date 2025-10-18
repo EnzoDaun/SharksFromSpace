@@ -51,15 +51,27 @@ OPENAI_MODEL=gpt-4
 
 ### 3. Rotas disponíveis
 
-Após o deploy, sua URL será algo como: `https://sharks-from-space-api.onrender.com`
+Após o deploy, sua URL será: `https://sharksfromspace-api.onrender.com`
 
-Rotas disponíveis:
+Rotas disponíveis (3 endpoints principais):
 
-- `GET /` - Hello World
-- `GET /nasa/chlorophyll.png?time=2024-05-15` - Imagem PNG de clorofila
-- `GET /nasa/sst.png?time=2024-05-15` - Imagem PNG de temperatura
-- `GET /nasa/maps?time=2024-05-15` - Ambas imagens em JSON com base64
-- `GET /openai/analyze?time=2024-05-15` - Análise HTML (requer OpenAI key)
+#### 1. Clorofila-a
+```bash
+curl --location 'https://sharksfromspace-api.onrender.com/nasa/chlorophyll.png?time=2024-05-15'
+```
+
+#### 2. SST (Temperatura da Superfície do Mar)
+```bash
+curl --location 'https://sharksfromspace-api.onrender.com/nasa/sst.png?time=2024-05-15'
+```
+
+#### 3. Análise de IA
+```bash
+curl --location 'https://sharksfromspace-api.onrender.com/openai/analyze?time=2024-05-15' \
+--header 'Accept: text/html'
+```
+
+**Swagger Docs**: https://sharksfromspace-api.onrender.com/api
 
 ### 4. Troubleshooting
 
