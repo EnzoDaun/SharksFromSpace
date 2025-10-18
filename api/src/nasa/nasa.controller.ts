@@ -3,7 +3,15 @@ import type { Response } from 'express';
 import { GetChlorophyllMapUseCase } from './usecases/get-chlorophyll-map.usecase';
 import { GetSstMapUseCase } from './usecases/get-sst-map.usecase';
 import { GetMapDto } from './dto/get-map.dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiQuery,
+  ApiProduces,
+} from '@nestjs/swagger';
 
+@ApiTags('nasa')
 @Controller('nasa')
 export class NasaController {
   constructor(
@@ -11,40 +19,34 @@ export class NasaController {
     private readonly getSst: GetSstMapUseCase,
   ) {}
 
-  /** Returns both maps (chlorophyll and SST) with base64 images and URLs */
-  @Get('maps')
-  async getBothMaps(
-    @Query(new ValidationPipe({ transform: true })) dto: GetMapDto,
-  ) {
-    const partialOpts = dto.toPartialBuildOptions();
-
-    const [chla, sst] = await Promise.all([
-      this.getChla.execute(dto.time, partialOpts),
-      this.getSst.execute(dto.time, partialOpts),
-    ]);
-
-    const chlaBase64 = chla.buffer.toString('base64');
-    const sstBase64 = sst.buffer.toString('base64');
-
-    return {
-      time: dto.time,
-      chlorophyll: {
-        url: chla.url,
-        contentType: chla.contentType,
-        base64: chlaBase64,
-        dataUrl: `data:${chla.contentType};base64,${chlaBase64}`,
-      },
-      sst: {
-        url: sst.url,
-        contentType: sst.contentType,
-        base64: sstBase64,
-        dataUrl: `data:${sst.contentType};base64,${sstBase64}`,
-      },
-    };
-  }
-
-  /** Returns chlorophyll image as PNG stream */
   @Get('chlorophyll.png')
+  @ApiOperation({
+    summary: 'Obter imagem de Clorofila-a',
+    description: 'Retorna a imagem de Clorofila-a em formato PNG para uma data específica',
+  })
+  @ApiProduces('image/png')
+  @ApiQuery({
+    name: 'time',
+    required: true,
+    description: 'Data no formato YYYY-MM-DD',
+    example: '2024-05-15',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Imagem PNG de Clorofila-a',
+    content: {
+      'image/png': {
+        schema: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Data inválida ou parâmetros incorretos',
+  })
   async getChlaPng(
     @Query(new ValidationPipe({ transform: true })) dto: GetMapDto,
     @Res({ passthrough: false }) res: Response,
@@ -59,8 +61,34 @@ export class NasaController {
       .send(buffer);
   }
 
-  /** Returns SST image as PNG stream */
   @Get('sst.png')
+  @ApiOperation({
+    summary: 'Obter imagem de Temperatura da Superfície do Mar (SST)',
+    description: 'Retorna a imagem de Temperatura da Superfície do Mar em formato PNG para uma data específica',
+  })
+  @ApiProduces('image/png')
+  @ApiQuery({
+    name: 'time',
+    required: true,
+    description: 'Data no formato YYYY-MM-DD',
+    example: '2024-05-15',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Imagem PNG de SST',
+    content: {
+      'image/png': {
+        schema: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Data inválida ou parâmetros incorretos',
+  })
   async getSstPng(
     @Query(new ValidationPipe({ transform: true })) dto: GetMapDto,
     @Res({ passthrough: false }) res: Response,
